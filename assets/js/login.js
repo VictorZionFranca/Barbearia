@@ -18,7 +18,7 @@ function logar() {
 
         setTimeout(() => {
             location.href = "dashboard.html";
-        }, 1500); 
+        }, 650); 
     } else {
         alert('Login ou senha incorretos!');
     }
