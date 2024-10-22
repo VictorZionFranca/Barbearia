@@ -69,6 +69,12 @@
                       </div>
                     </div>
 
+                    <!-- Código de carregamento após entrar no site -->
+                    <div id="loading" class="spinner-border" role="status" style="display:none; position: absolute;
+                    top: 190px; margin-left: 145px; width: 80px !important; height: 80px !important;">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Senha</label>
                       <input type="password" name="password" class="form-control" id="senha" required>
@@ -82,7 +88,8 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit" onclick="logar(); return false ">Login</button>
+                      <button class="btn btn-primary w-100" type="submit"
+                        onclick="logar(); return false ">Login</button>
                     </div>
                     <div class="col-12">
                       <p class="small mb-0">Ainda não tem conta? <a href="pages-register.html">Criar conta</a></p>

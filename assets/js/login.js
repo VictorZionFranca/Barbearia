@@ -13,8 +13,12 @@ function logar() {
     const usuarioValido = usuarios.find(u => u.usuario === login && u.senha === senha);
 
     if (usuarioValido) {
-        location.href = "dashboard.html";
-        alert('Bem vindo!')
+
+        document.getElementById('loading').style.display = 'block';
+
+        setTimeout(() => {
+            location.href = "dashboard.html";
+        }, 1500); 
     } else {
         alert('Login ou senha incorretos!');
     }
