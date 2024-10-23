@@ -180,7 +180,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="index.html">
+              <a class="dropdown-item d-flex align-items-center" href="index.html" onclick="logout()">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -1065,6 +1065,28 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  
+  <!-- Código que limpa o histórico após a realização do login -->
+  <script>
+    window.onload = function() {
+        const usuarioAutenticado = localStorage.getItem('usuarioAutenticado');
+
+        if (!usuarioAutenticado) {
+            location.replace("index.html");
+        } else {
+            // Limpar o histórico de navegação
+            history.pushState(null, null, location.href);
+            window.onpopstate = function() {
+                history.pushState(null, null, location.href);
+            };
+        }
+    };
+
+    function logout() {
+        localStorage.removeItem('usuarioAutenticado');
+        location.replace("index.html");
+    }
+</script>
 
 </body>
 
