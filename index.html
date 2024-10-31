@@ -31,13 +31,6 @@
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
@@ -59,10 +52,10 @@
                     <p class="text-center small">Coloque seu login e a sua senha!</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form id="loginForm" class="row g-3 needs-validation" novalidate>
 
                     <div class="col-12">
-                      <label for="yourUsername" class="form-label">Login</label>
+                      <label for="login" class="form-label">Login</label>
                       <div class="input-group has-validation">
                         <input type="text" name="username" class="form-control" id="login" required>
                         <div class="invalid-feedback">Por favor digite seu login!</div>
@@ -76,7 +69,7 @@
                     </div>
 
                     <div class="col-12">
-                      <label for="yourPassword" class="form-label">Senha</label>
+                      <label for="senha" class="form-label">Senha</label>
                       <input type="password" name="password" class="form-control" id="senha" required>
                       <div class="invalid-feedback">Por favor digite sua senha!</div>
                     </div>
@@ -88,8 +81,7 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit"
-                        onclick="logar(); return false ">Login</button>
+                      <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
                     <div class="col-12">
                       <p class="small mb-0">Ainda não tem conta? <a href="pages-register.html">Criar conta</a></p>
@@ -112,18 +104,59 @@
       class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/login.js"></script>
+  <!-- Firebase App (SDK) -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC1L8icCO16S5So61SMpv9QYtcRAdFi0mU",
+      authDomain: "gestaobarbearia-153fc.firebaseapp.com",
+      projectId: "gestaobarbearia-153fc",
+      storageBucket: "gestaobarbearia-153fc.appspot.com",
+      messagingSenderId: "432065485404",
+      appId: "1:432065485404:web:ea586cfc3332edbcdc2499",
+      measurementId: "G-8JZH0RF52R"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+  
+    // Função de login
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o envio padrão do formulário
+      const email = document.getElementById('login').value;
+      const password = document.getElementById('senha').value;
+  
+      // Exibe o carregamento
+      document.getElementById('loading').style.display = 'block';
+  
+      console.log("Tentando fazer login com:", email); // Log do e-mail
+  
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("Login bem-sucedido:", user);
+          window.location.replace("dashboard.html"); // Redireciona para dashboard.html
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error("Erro no login:", errorCode, errorMessage);
+          alert("Login ou senha incorretos!"); // Mensagem de erro
+        })
+        .finally(() => {
+          // Esconder o carregamento após a tentativa de login
+          document.getElementById('loading').style.display = 'none';
+        });
+    });
+  </script>
+  
 
 </body>
 
