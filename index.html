@@ -30,6 +30,55 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { firebaseConfig } from "./assets/js/firebaseConfig.js";
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Verifica se o usuário já está autenticado ao carregar a página de login
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Se o usuário já estiver autenticado, redireciona para o dashboard
+            window.location.replace("dashboard.html");
+        }
+    });
+
+    // Função de login
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+            const email = document.getElementById('login').value;
+            const password = document.getElementById('senha').value;
+
+            // Exibe o carregamento
+            document.getElementById('loading').style.display = 'block';
+
+            console.log("Tentando fazer login com:", email); // Log do e-mail
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log("Login bem-sucedido:", user);
+                    window.location.replace("dashboard.html"); // Redireciona para dashboard.html
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error("Erro no login:", errorCode, errorMessage);
+                    alert("Login ou senha incorretos!"); // Mensagem de erro
+                })
+                .finally(() => {
+                    // Esconder o carregamento após a tentativa de login
+                    document.getElementById('loading').style.display = 'none';
+                });
+        });
+    });
+</script>
 
 </head>
 
@@ -105,48 +154,6 @@
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Firebase App (SDK) -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./assets/js/firebaseConfig.js";
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-  
-    // Função de login
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Impede o envio padrão do formulário
-      const email = document.getElementById('login').value;
-      const password = document.getElementById('senha').value;
-  
-      // Exibe o carregamento
-      document.getElementById('loading').style.display = 'block';
-  
-      console.log("Tentando fazer login com:", email); // Log do e-mail
-  
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log("Login bem-sucedido:", user);
-          window.location.replace("dashboard.html"); // Redireciona para dashboard.html
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error("Erro no login:", errorCode, errorMessage);
-          alert("Login ou senha incorretos!"); // Mensagem de erro
-        })
-        .finally(() => {
-          // Esconder o carregamento após a tentativa de login
-          document.getElementById('loading').style.display = 'none';
-        });
-    });
-  </script>
-  
 
 </body>
 

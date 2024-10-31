@@ -36,6 +36,7 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <script type="module" src="./assets/js/authCheck.js"></script>
 </head>
 
 <body>
@@ -180,7 +181,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="index.html" onclick="logout()">
+              <a class="dropdown-item d-flex align-items-center" href="index.html" id="logoutButton">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -494,7 +495,7 @@
         const user = auth.currentUser;
         if (!user) {
             alert("Você precisa estar autenticado para adicionar clientes.");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
             return;
         }
 
@@ -540,8 +541,7 @@
                 <td>${client.cpf}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" onclick="editClient('${doc.id}', '${client.nome}', '${client.celular}', '${client.email}', '${client.cpf}')"><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteClient('${doc.id}')"><i class="bi bi-trash">
-                      </i></button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteClient('${doc.id}')"><i class="bi bi-trash"></i></button>
                 </td>
             `;
 
@@ -592,6 +592,20 @@
         }
     }
 
+    // Função para fazer logout
+    async function logout() {
+        try {
+            await auth.signOut();
+            window.location.href = "index.html"; // Redireciona para o login após o logout
+        } catch (error) {
+            console.error("Erro ao fazer logout:", error);
+            alert("Erro ao fazer logout.");
+        }
+    }
+
+    // Adiciona evento de clique ao botão de logout
+    document.getElementById("logoutButton").addEventListener("click", logout);
+
     // Torna as funções editClient e deleteClient acessíveis globalmente
     window.editClient = editClient;
     window.deleteClient = deleteClient;
@@ -604,7 +618,7 @@
                 loadClients(); // Carrega clientes se o usuário estiver autenticado
             } else {
                 console.log("Usuário não autenticado.");
-                window.location.href = "login.html"; // Redireciona se não autenticado
+                window.location.href = "index.html"; // Redireciona se não autenticado
             }
         });
     });
@@ -612,10 +626,6 @@
     // Adicionar evento de submissão no formulário
     document.getElementById("addClientForm").addEventListener("submit", addClient);
 </script>
-
-
-  
-  <!-- Código que limpa o histórico após a realização do login -->
 
 </body>
 
