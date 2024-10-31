@@ -382,20 +382,68 @@
   </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
-
     <div class="pagetitle">
-      <h1>Clientes</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
-          <li class="breadcrumb-item active">Clientes</li>
-        </ol>
-      </nav>
+        <h1>Clientes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
+                <li class="breadcrumb-item active">Clientes</li>
+            </ol>
+        </nav>
     </div><!-- End Page Title -->
 
-    
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal" style="margin-bottom: 50px;">
+        Adicionar Cliente <i class="bi bi-plus-circle"></i>
+    </button>
 
-  </main><!-- End #main -->
+    <!-- Tabela de Clientes -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Celular</th>
+                <th>Email</th>
+                <th>CPF</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="clientTableBody"></tbody>
+    </table>
+
+    <!-- Modal para Adicionar Cliente -->
+    <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClientModalLabel">Adicionar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addClientForm">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="celular" class="form-label">Celular</label>
+                            <input type="text" class="form-control" id="celular" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cpf" class="form-label">CPF</label>
+                            <input type="text" class="form-control" id="cpf" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main><!-- End #main -->
+
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -425,6 +473,146 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { firebaseConfig } from "./assets/js/firebaseConfig.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Referência para a coleção de clientes
+    const clientCollection = collection(db, "clientes");
+
+    // Função para adicionar um novo cliente (se autenticado)
+    async function addClient(event) {
+        event.preventDefault();
+
+        const user = auth.currentUser;
+        if (!user) {
+            alert("Você precisa estar autenticado para adicionar clientes.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const nome = document.getElementById("nome").value;
+        const celular = document.getElementById("celular").value;
+        const email = document.getElementById("email").value;
+        const cpf = document.getElementById("cpf").value;
+
+        try {
+            await addDoc(clientCollection, {
+                nome: nome,
+                celular: celular,
+                email: email,
+                cpf: cpf,
+                userId: user.uid // Armazena o ID do usuário que adicionou o cliente
+            });
+            alert("Cliente adicionado com sucesso!");
+            document.getElementById("addClientForm").reset();
+            loadClients(); // Atualiza a tabela após adicionar um novo cliente
+            // Fecha o modal se estiver utilizando
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
+            if (modal) modal.hide();
+        } catch (error) {
+            console.error("Erro ao adicionar cliente: ", error);
+            alert("Erro ao adicionar cliente.");
+        }
+    }
+
+    // Função para carregar os clientes e exibi-los na tabela
+    async function loadClients() {
+        const querySnapshot = await getDocs(clientCollection);
+        const clientTableBody = document.getElementById("clientTableBody");
+        clientTableBody.innerHTML = ""; // Limpa a tabela antes de adicionar os clientes
+
+        querySnapshot.forEach((doc) => {
+            const client = doc.data();
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${client.nome}</td>
+                <td>${client.celular}</td>
+                <td>${client.email}</td>
+                <td>${client.cpf}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editClient('${doc.id}', '${client.nome}', '${client.celular}', '${client.email}', '${client.cpf}')">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteClient('${doc.id}')">Excluir</button>
+                </td>
+            `;
+
+            clientTableBody.appendChild(row);
+        });
+    }
+
+    // Função para editar um cliente
+    async function editClient(id, nome, celular, email, cpf) {
+        const newNome = prompt("Editar Nome:", nome);
+        const newCelular = prompt("Editar Celular:", celular);
+        const newEmail = prompt("Editar Email:", email);
+        const newCpf = prompt("Editar CPF:", cpf);
+
+        if (newNome && newCelular && newEmail && newCpf) {
+            const clientRef = doc(db, "clientes", id);
+            try {
+                await updateDoc(clientRef, {
+                    nome: newNome,
+                    celular: newCelular,
+                    email: newEmail,
+                    cpf: newCpf
+                });
+                alert("Cliente editado com sucesso!");
+                loadClients(); // Atualiza a tabela após editar o cliente
+            } catch (error) {
+                console.error("Erro ao editar cliente: ", error);
+                alert("Erro ao editar cliente.");
+            }
+        } else {
+            alert("Todos os campos devem ser preenchidos para editar o cliente.");
+        }
+    }
+
+    // Função para excluir um cliente
+    async function deleteClient(id) {
+        const confirmDelete = confirm("Você tem certeza que deseja excluir este cliente?");
+        if (confirmDelete) {
+            const clientRef = doc(db, "clientes", id);
+            try {
+                await deleteDoc(clientRef);
+                alert("Cliente excluído com sucesso!");
+                loadClients(); // Atualiza a tabela após excluir o cliente
+            } catch (error) {
+                console.error("Erro ao excluir cliente: ", error);
+                alert("Erro ao excluir cliente.");
+            }
+        }
+    }
+
+    // Torna as funções editClient e deleteClient acessíveis globalmente
+    window.editClient = editClient;
+    window.deleteClient = deleteClient;
+
+    // Carregar os clientes ao abrir a página e verificar autenticação
+    document.addEventListener("DOMContentLoaded", () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Usuário autenticado:", user.email);
+                loadClients(); // Carrega clientes se o usuário estiver autenticado
+            } else {
+                console.log("Usuário não autenticado.");
+                window.location.href = "login.html"; // Redireciona se não autenticado
+            }
+        });
+    });
+
+    // Adicionar evento de submissão no formulário
+    document.getElementById("addClientForm").addEventListener("submit", addClient);
+</script>
+
+
   
   <!-- Código que limpa o histórico após a realização do login -->
 
