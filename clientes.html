@@ -393,6 +393,8 @@
         </nav>
     </div><!-- End Page Title -->
 
+    <input type="text" id="filterInput" class="form-control" placeholder="Buscar por nome..." style="margin-bottom: 20px;">
+
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal" style="margin-bottom: 50px;">
         Adicionar Cliente <i class="bi bi-plus-circle"></i>
     </button>
@@ -443,7 +445,8 @@
             </div>
         </div>
     </div>
-</main><!-- End #main -->
+</main>
+<!-- End #main -->
 
 
   <!-- ======= Footer ======= -->
@@ -667,9 +670,35 @@
 
     // Adicionar evento de submissão no formulário
     document.getElementById("addClientForm").addEventListener("submit", addClient);
+
+    // Função para filtrar clientes
+    function filterClients() {
+        const filter = document.getElementById("filterInput").value.toLowerCase();
+        const clientTableBody = document.getElementById("clientTableBody");
+        const rows = clientTableBody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(filter)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+
+    // Adiciona evento de input ao campo de filtro
+    document.getElementById("filterInput").addEventListener("input", filterClients);
 </script>
-
-
 
 </body>
 
