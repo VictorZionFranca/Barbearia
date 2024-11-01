@@ -463,6 +463,42 @@
       </div>
     </div>
 
+    <!-- Modal de Notificação - Cliente Excluído -->
+    <div class="modal fade" id="clientDeletedModal" tabindex="-1" aria-labelledby="clientDeletedModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="clientDeletedModalLabel">Cliente Excluído</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            O cliente foi excluído com sucesso!
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de erro CPF já existente -->
+    <div class="modal fade" id="cpfErrorModal" tabindex="-1" aria-labelledby="cpfErrorModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="cpfErrorModalLabel">Erro</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  O CPF já está cadastrado. Por favor, insira um CPF diferente.
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
   </main>
 <!-- End #main -->
 
@@ -509,45 +545,61 @@
     // Referência para a coleção de clientes
     const clientCollection = collection(db, "clientes");
 
-    // Função para adicionar um novo cliente (se autenticado)
-    async function addClient(event) {
-        event.preventDefault();
+      // Função para adicionar um novo cliente (se autenticado)
+      async function addClient(event) {
+      event.preventDefault();
 
-        const user = auth.currentUser;
-        if (!user) {
-            alert("Você precisa estar autenticado para adicionar clientes.");
-            window.location.href = "index.html";
-            return;
-        }
+      const user = auth.currentUser;
+      if (!user) {
+          alert("Você precisa estar autenticado para adicionar clientes.");
+          window.location.href = "index.html";
+          return;
+      }
 
-        const nome = document.getElementById("nome").value;
-        const celular = document.getElementById("celular").value;
-        const email = document.getElementById("email").value;
-        const cpf = document.getElementById("cpf").value;
+      const nome = document.getElementById("nome").value;
+      const celular = document.getElementById("celular").value;
+      const email = document.getElementById("email").value;
+      const cpf = document.getElementById("cpf").value;
 
-        try {
-            await addDoc(clientCollection, {
-                nome: nome,
-                celular: celular,
-                email: email,
-                cpf: cpf,
-                userId: user.uid // Armazena o ID do usuário que adicionou o cliente
-            });
-            document.getElementById("addClientForm").reset();
-            // Mostra o modal de cliente adicionado
-            const addedModal = new bootstrap.Modal(document.getElementById("clientAddedModal"));
-            addedModal.show();
-            loadClients(); // Atualiza a tabela após adicionar um novo cliente
-            // Fecha o modal se estiver utilizando
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
-            if (modal) modal.hide();
-        } catch (error) {
-            console.error("Erro ao adicionar cliente: ", error);
-            alert("Erro ao adicionar cliente.");
-        }
-    }
+      // Verifica se o CPF já existe
+      const querySnapshot = await getDocs(clientCollection);
+      let cpfExists = false;
 
-    
+      querySnapshot.forEach((doc) => {
+          const client = doc.data();
+          if (client.cpf === cpf) {
+              cpfExists = true; // O CPF já existe
+          }
+      });
+
+      if (cpfExists) {
+          // Mostra o modal de CPF duplicado
+          const duplicateModal = new bootstrap.Modal(document.getElementById("cpfErrorModal"));
+          duplicateModal.show();
+          return; // Retorna sem adicionar o cliente
+      }
+
+      try {
+          await addDoc(clientCollection, {
+              nome: nome,
+              celular: celular,
+              email: email,
+              cpf: cpf,
+              userId: user.uid // Armazena o ID do usuário que adicionou o cliente
+          });
+          document.getElementById("addClientForm").reset();
+          // Mostra o modal de cliente adicionado
+          const addedModal = new bootstrap.Modal(document.getElementById("clientAddedModal"));
+          addedModal.show();
+          loadClients(); // Atualiza a tabela após adicionar um novo cliente
+          // Fecha o modal se estiver utilizando
+          const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
+          if (modal) modal.hide();
+      } catch (error) {
+          console.error("Erro ao adicionar cliente: ", error);
+          alert("Erro ao adicionar cliente.");
+      }
+  }
 
     // Função para carregar os clientes e exibi-los na tabela
     async function loadClients() {
@@ -637,6 +689,10 @@
         try {
             await deleteDoc(clientRef);
             loadClients(); // Atualiza a tabela após excluir o cliente
+
+            // Mostra o modal de cliente excluído
+            const deletedModal = new bootstrap.Modal(document.getElementById("clientDeletedModal"));
+            deletedModal.show();
 
             // Fecha o modal
             const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteClientModal"));
