@@ -208,82 +208,11 @@
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-calendar2-check"></i></i><span>Agendamentos</span><i class="bi bi-chevron-down ms-auto"></i>
+        <a class="nav-link collapsed" href="agendamentos.html">
+          <i class="bi bi-calendar2-check"></i></i>
+          <span>Agendamentos</span>
         </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Alerts</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Accordion</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Badges</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-breadcrumbs.html">
-              <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-buttons.html">
-              <i class="bi bi-circle"></i><span>Buttons</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-cards.html">
-              <i class="bi bi-circle"></i><span>Cards</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-carousel.html">
-              <i class="bi bi-circle"></i><span>Carousel</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-list-group.html">
-              <i class="bi bi-circle"></i><span>List group</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-modal.html">
-              <i class="bi bi-circle"></i><span>Modal</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tabs.html">
-              <i class="bi bi-circle"></i><span>Tabs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-pagination.html">
-              <i class="bi bi-circle"></i><span>Pagination</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-progress.html">
-              <i class="bi bi-circle"></i><span>Progress</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-spinners.html">
-              <i class="bi bi-circle"></i><span>Spinners</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tooltips.html">
-              <i class="bi bi-circle"></i><span>Tooltips</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Components Nav -->
+      </li>
 
       <li class="nav-item">
         <a class="nav-link" href="clientes.html">
@@ -445,7 +374,96 @@
             </div>
         </div>
     </div>
-</main>
+    <!-- Modal para Editar Cliente -->
+    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="editClientModalLabel">Editar Cliente</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="editClientForm">
+                      <input type="hidden" id="editClientId">
+                      <div class="mb-3">
+                          <label for="editNome" class="form-label">Nome</label>
+                          <input type="text" class="form-control" id="editNome" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="editCelular" class="form-label">Celular</label>
+                          <input type="text" class="form-control" id="editCelular" maxlength="15" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="editEmail" class="form-label">Email</label>
+                          <input type="email" class="form-control" id="editEmail" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="editCpf" class="form-label">CPF</label>
+                          <input type="text" class="form-control" id="editCpf" maxlength="14" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Salvar</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Modal para Confirmar Exclusão de Cliente -->
+    <div class="modal fade" id="deleteClientModal" tabindex="-1" aria-labelledby="deleteClientModalLabel"             aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="deleteClientModalLabel">Excluir Cliente</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p>Você tem certeza que deseja excluir este cliente?</p>
+                  <input type="hidden" id="deleteClientId">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
+              </div>
+          </div>
+      </div>
+    </div>
+            <!-- Modal de Notificação - Cliente Adicionado -->
+    <div class="modal fade" id="clientAddedModal" tabindex="-1" aria-labelledby="clientAddedModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clientAddedModalLabel">Cliente Adicionado</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  O cliente foi adicionado com sucesso!
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Modal de Notificação - Cliente Editado -->
+    <div class="modal fade" id="clientEditedModal" tabindex="-1" aria-labelledby="clientEditedModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clientEditedModalLabel">Cliente Editado</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  O cliente foi editado com sucesso!
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+  </main>
 <!-- End #main -->
 
 
@@ -515,8 +533,10 @@
                 cpf: cpf,
                 userId: user.uid // Armazena o ID do usuário que adicionou o cliente
             });
-            alert("Cliente adicionado com sucesso!");
             document.getElementById("addClientForm").reset();
+            // Mostra o modal de cliente adicionado
+            const addedModal = new bootstrap.Modal(document.getElementById("clientAddedModal"));
+            addedModal.show();
             loadClients(); // Atualiza a tabela após adicionar um novo cliente
             // Fecha o modal se estiver utilizando
             const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
@@ -526,6 +546,8 @@
             alert("Erro ao adicionar cliente.");
         }
     }
+
+    
 
     // Função para carregar os clientes e exibi-los na tabela
     async function loadClients() {
@@ -552,48 +574,79 @@
         });
     }
 
-    // Função para editar um cliente
-    async function editClient(id, nome, celular, email, cpf) {
-        const newNome = prompt("Editar Nome:", nome);
-        const newCelular = prompt("Editar Celular:", celular);
-        const newEmail = prompt("Editar Email:", email);
-        const newCpf = prompt("Editar CPF:", cpf);
+        // Função para editar um cliente
+    function editClient(id, nome, celular, email, cpf) {
+        // Preenche os campos do modal com os dados do cliente
+        document.getElementById("editClientId").value = id;
+        document.getElementById("editNome").value = nome;
+        document.getElementById("editCelular").value = celular;
+        document.getElementById("editEmail").value = email;
+        document.getElementById("editCpf").value = cpf;
 
-        if (newNome && newCelular && newEmail && newCpf) {
-            const clientRef = doc(db, "clientes", id);
-            try {
-                await updateDoc(clientRef, {
-                    nome: newNome,
-                    celular: newCelular,
-                    email: newEmail,
-                    cpf: newCpf
-                });
-                alert("Cliente editado com sucesso!");
-                loadClients(); // Atualiza a tabela após editar o cliente
-            } catch (error) {
-                console.error("Erro ao editar cliente: ", error);
-                alert("Erro ao editar cliente.");
-            }
-        } else {
-            alert("Todos os campos devem ser preenchidos para editar o cliente.");
-        }
+        // Abre o modal
+        const editModal = new bootstrap.Modal(document.getElementById("editClientModal"));
+        editModal.show();
     }
+
+    // Evento para submeter o formulário de edição
+    document.getElementById("editClientForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const id = document.getElementById("editClientId").value;
+        const nome = document.getElementById("editNome").value;
+        const celular = document.getElementById("editCelular").value;
+        const email = document.getElementById("editEmail").value;
+        const cpf = document.getElementById("editCpf").value;
+
+        const clientRef = doc(db, "clientes", id);
+        try {
+            await updateDoc(clientRef, {
+                nome: nome,
+                celular: celular,
+                email: email,
+                cpf: cpf
+            });
+            loadClients(); // Atualiza a tabela após editar o cliente
+
+            // Mostra o modal de cliente editado
+            const editedModal = new bootstrap.Modal(document.getElementById("clientEditedModal"));
+            editedModal.show();
+
+
+            // Fecha o modal
+            const editModal = bootstrap.Modal.getInstance(document.getElementById("editClientModal"));
+            if (editModal) editModal.hide();
+        } catch (error) {
+            console.error("Erro ao editar cliente: ", error);
+            alert("Erro ao editar cliente.");
+        }
+    });
 
     // Função para excluir um cliente
-    async function deleteClient(id) {
-        const confirmDelete = confirm("Você tem certeza que deseja excluir este cliente?");
-        if (confirmDelete) {
-            const clientRef = doc(db, "clientes", id);
-            try {
-                await deleteDoc(clientRef);
-                alert("Cliente excluído com sucesso!");
-                loadClients(); // Atualiza a tabela após excluir o cliente
-            } catch (error) {
-                console.error("Erro ao excluir cliente: ", error);
-                alert("Erro ao excluir cliente.");
-            }
-        }
+    function deleteClient(id) {
+        // Abre o modal de confirmação
+        document.getElementById("deleteClientId").value = id;
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteClientModal"));
+        deleteModal.show();
     }
+
+    // Evento para confirmar a exclusão
+    document.getElementById("confirmDeleteButton").addEventListener("click", async () => {
+        const id = document.getElementById("deleteClientId").value;
+        const clientRef = doc(db, "clientes", id);
+        try {
+            await deleteDoc(clientRef);
+            loadClients(); // Atualiza a tabela após excluir o cliente
+
+            // Fecha o modal
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteClientModal"));
+            if (deleteModal) deleteModal.hide();
+        } catch (error) {
+            console.error("Erro ao excluir cliente: ", error);
+            alert("Erro ao excluir cliente.");
+        }
+    });
+
 
     // Função para fazer logout
     async function logout() {

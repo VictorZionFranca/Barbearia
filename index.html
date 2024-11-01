@@ -30,13 +30,12 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+
   <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import { firebaseConfig } from "./assets/js/firebaseConfig.js";
 
-    // Inicializa o Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
@@ -48,8 +47,10 @@
         }
     });
 
-    // Função de login
+    // Chama a função preventBack ao carregar a página
     document.addEventListener('DOMContentLoaded', function() {
+        preventBack(); // Previne que o usuário volte para a página anterior
+
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Impede o envio padrão do formulário
             const email = document.getElementById('login').value;
@@ -58,13 +59,12 @@
             // Exibe o carregamento
             document.getElementById('loading').style.display = 'block';
 
-            console.log("Tentando fazer login com:", email); // Log do e-mail
-
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
                     console.log("Login bem-sucedido:", user);
-                    window.location.replace("dashboard.html"); // Redireciona para dashboard.html
+                    // Usa location.replace para evitar que o usuário volte
+                    window.location.replace("dashboard.html");
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -78,6 +78,15 @@
                 });
         });
     });
+
+    // Função para impedir que o usuário volte para a página anterior
+    function preventBack() {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+            // Redireciona para o dashboard se o usuário tentar voltar
+            window.location.replace("index.html");
+        };
+    }
 </script>
 
 </head>
