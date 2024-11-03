@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Agendamentos</title>
+  <title>Clientes</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -37,15 +37,6 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
   <script type="module" src="./assets/js/authCheck.js"></script>
-
-  <!-- Scripts para calendário -->
-  <script src="assets/js/calendario.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.7/main.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.7/main.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/locale-all@6.1.7/main.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.7/main.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/calendario.css">
-
 </head>
 
 <body>
@@ -217,7 +208,7 @@
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link" href="agendamentos.html">
+        <a class="nav-link collapsed" href="agendamentos.html">
           <i class="bi bi-calendar2-check"></i></i>
           <span>Agendamentos</span>
         </a>
@@ -249,7 +240,7 @@
       </li><!-- End Tables Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="servicos.html">
+        <a class="nav-link" href="servicos.html">
           <i class="bi bi-scissors"></i>
           <span>Serviços</span>
         </a>
@@ -300,68 +291,17 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Agendamentos</h1>
+        <h1>Serviços</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
-                <li class="breadcrumb-item active">Agendamentos</li>
+                <li class="breadcrumb-item active">Serviços</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
+
+
     
-    <div class="container mt-5">
-      <div id="calendar"></div>
-  </div>
-  
-  <!-- Modal de Agendamento -->
-  <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="appointmentModalLabel">Agendar Atendimento</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <form id="appointmentForm">
-                      <div class="mb-3">
-                          <label for="client" class="form-label">Cliente</label>
-                          <input type="text" class="form-control" id="client" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="barber" class="form-label">Barbeiro</label>
-                          <input type="text" class="form-control" id="barber" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="service" class="form-label">Serviço</label>
-                          <input type="text" class="form-control" id="service" required>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Salvar</button>
-                      <button type="button" class="btn btn-secondary" id="cancelButton">Cancelar</button>
-                  </form>
-              </div>
-          </div>
-      </div>
-  </div>
-  
-  <!-- Modal de Confirmação de Exclusão -->
-  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="confirmationModalLabel">Confirmar Exclusão</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <p>Você tem certeza que deseja excluir este agendamento?</p>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" id="cancelDeleteButton">Cancelar</button>
-                  <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
-              </div>
-          </div>
-      </div>
-  </div>
-  
   </main>
 <!-- End #main -->
 
@@ -394,157 +334,6 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./assets/js/firebaseConfig.js";
-  
-    // Inicializa o Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-  
-    // Verifica se o usuário está autenticado ao carregar a página
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Se o usuário não estiver autenticado, redireciona para a página de login
-        window.location.replace("index.html");
-      } else {
-        // O usuário está autenticado
-        console.log("Usuário autenticado:", user.email);
-        // Impede que o usuário volte para a página de login
-        history.pushState(null, null, location.href);
-        window.onpopstate = function() {
-            history.pushState(null, null, location.href);
-        };
-      }
-    });
-  
-    // Função de logout
-    function logout() {
-      signOut(auth).then(() => {
-        // Redireciona para a página de login após o logout
-        window.location.replace("index.html");
-      }).catch((error) => {
-        console.error("Erro ao fazer logout:", error);
-      });
-    }
-  
-    // Adiciona o evento de logout a um botão, se necessário
-    document.getElementById('logoutButton').addEventListener('click', logout);
-  </script>  
-
-  <!-- Funções do calendário -->
-  <script>
-    let currentEvent; // Variável para armazenar o evento atual a ser excluído
-
-document.addEventListener('DOMContentLoaded', function() {
-  var calendarEl = document.getElementById('calendar');
-
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    locale: 'pt-br', // Definindo o idioma para português
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay' // Mantendo a opção de mês
-    },
-    buttonText: {
-      today: 'Hoje', // Mudar o texto de 'today' para 'Hoje'
-      month: 'Mês',   // Mudar o texto de 'Month' para 'Mês'
-      week: 'Semana',  // Mudar o texto de 'Week' para 'Semana'
-      day: 'Dia'      // Mudar o texto de 'Day' para 'Dia'
-    },
-    initialDate: new Date(), // Abre o calendário na data atual
-    navLinks: true,
-    selectable: true,
-    editable: true,
-    dayMaxEvents: true,
-    slotDuration: '00:30:00', // Duração dos slots em 30 minutos
-    allDaySlot: false, // Desabilitando a visualização de 'All Day'
-    eventDurationEditable: false, // Desabilitando a edição da duração do evento
-    select: function(arg) {
-      openModal(arg.start, arg.end); // Passando apenas a data de início
-      calendar.unselect();
-    },
-    eventClick: function(info) {
-      currentEvent = info.event; // Armazenar o evento que foi clicado
-      openConfirmationModal();
-    }
-  });
-
-  calendar.render();
-
-  // Função para abrir o modal de agendamento
-  function openModal(start, end) {
-    var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-    modal.show();
-    
-    // Armazenar as datas selecionadas para usar ao criar o evento
-    document.getElementById("appointmentForm").dataset.start = start.toISOString();
-    document.getElementById("appointmentForm").dataset.end = end.toISOString();
-  }
-
-  // Função para fechar o modal de agendamento
-  function closeModal() {
-    var modal = bootstrap.Modal.getInstance(document.getElementById('appointmentModal'));
-    modal.hide();
-    document.getElementById("appointmentForm").reset(); // Limpa o formulário
-  }
-
-  // Função para abrir o modal de confirmação
-  function openConfirmationModal() {
-    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-    confirmationModal.show();
-  }
-
-  // Evento para o botão de cancelar no modal de agendamento
-  document.getElementById("cancelButton").addEventListener("click", function() {
-    closeModal(); // Chama a função para fechar o modal
-  });
-
-  // Evento para o botão de confirmar a exclusão
-  document.getElementById("confirmDeleteButton").addEventListener("click", function() {
-    if (currentEvent) {
-      currentEvent.remove(); // Remove o evento do calendário
-      closeConfirmationModal();
-    }
-  });
-
-  // Evento para o botão de cancelar a exclusão
-  document.getElementById("cancelDeleteButton").addEventListener("click", function() {
-    closeConfirmationModal();
-  });
-
-  // Função para fechar o modal de confirmação
-  function closeConfirmationModal() {
-    var modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
-    modal.hide();
-  }
-
-  // Submissão do formulário de agendamento
-  document.getElementById("appointmentForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    var client = document.getElementById("client").value;
-    var barber = document.getElementById("barber").value;
-    var service = document.getElementById("service").value;
-    var start = new Date(this.dataset.start);
-    var end = new Date(this.dataset.end);
-
-    // Adicionar evento ao calendário com as informações do formulário
-    calendar.addEvent({
-      title: `${service} - ${client} (${barber})`,
-      start: start,
-      end: end,
-      allDay: false // Garantindo que não seja um evento de dia inteiro
-    });
-
-    closeModal();
-  });
-});
-
-  </script> 
 
 </body>
 
