@@ -15,7 +15,9 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -280,158 +282,170 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Clientes</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
-                <li class="breadcrumb-item active">Clientes</li>
-            </ol>
-        </nav>
+      <h1>Clientes</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
+          <li class="breadcrumb-item active">Clientes</li>
+        </ol>
+      </nav>
     </div><!-- End Page Title -->
 
-    <input type="text" id="filterInput" class="form-control" placeholder="Buscar por nome..." style="margin-bottom: 20px;">
+    <input type="text" id="filterInput" class="form-control" placeholder="Buscar por nome..."
+      style="margin-bottom: 20px;">
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal" style="margin-bottom: 50px;">
-        Adicionar Cliente <i class="bi bi-plus-circle"></i>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal"
+      style="margin-bottom: 50px;">
+      Adicionar Cliente <i class="bi bi-plus-circle"></i>
     </button>
 
     <!-- Tabela de Clientes -->
     <table class="table">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Celular</th>
-                <th>Email</th>
-                <th>CPF</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="clientTableBody"></tbody>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Celular</th>
+          <th>Email</th>
+          <th>CPF</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="clientTableBody"></tbody>
     </table>
 
     <!-- Modal para Adicionar Cliente -->
     <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addClientModalLabel">Adicionar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addClientForm">
-                        <div class="mb-3">
-                            <label for="nome" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="nome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="celular" class="form-label">Celular</label>
-                            <input type="text" class="form-control" id="celular" maxlength="15" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cpf" class="form-label">CPF</label>
-                            <input type="text" class="form-control" id="cpf" maxlength="14" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para Editar Cliente -->
-    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="editClientModalLabel">Editar Cliente</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <form id="editClientForm">
-                      <input type="hidden" id="editClientId">
-                      <div class="mb-3">
-                          <label for="editNome" class="form-label">Nome</label>
-                          <input type="text" class="form-control" id="editNome" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="editCelular" class="form-label">Celular</label>
-                          <input type="text" class="form-control" id="editCelular" maxlength="15" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="editEmail" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="editEmail" required>
-                      </div>
-                      <div class="mb-3">
-                          <label for="editCpf" class="form-label">CPF</label>
-                          <input type="text" class="form-control" id="editCpf" maxlength="14" required>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Salvar</button>
-                  </form>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addClientModalLabel">Adicionar Cliente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            <form id="addClientForm">
+              <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="nome" required>
+              </div>
+              <div class="mb-3">
+                <label for="celular" class="form-label">Celular</label>
+                <input type="text" class="form-control" id="celular" maxlength="15" required>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+              </div>
+              <div class="mb-3">
+                <label for="cpf" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="cpf" maxlength="14" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Editar Cliente -->
+    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editClientModalLabel">Editar Cliente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editClientForm">
+              <input type="hidden" id="editClientId">
+              <div class="mb-3">
+                <label for="editNome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="editNome" required>
+              </div>
+              <div class="mb-3">
+                <label for="editCelular" class="form-label">Celular</label>
+                <input type="text" class="form-control" id="editCelular" maxlength="15" required>
+              </div>
+              <div class="mb-3">
+                <label for="editEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="editEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="editCpf" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="editCpf" maxlength="14" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Modal para Confirmar Exclusão de Cliente -->
-    <div class="modal fade" id="deleteClientModal" tabindex="-1" aria-labelledby="deleteClientModalLabel"             aria-hidden="true">
+    <div class="modal fade" id="deleteClientModal" tabindex="-1" aria-labelledby="deleteClientModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="deleteClientModalLabel">Excluir Cliente</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <p>Você tem certeza que deseja excluir este cliente?</p>
-                  <input type="hidden" id="deleteClientId">
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteClientModalLabel">Excluir Cliente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            <p>Você tem certeza que deseja excluir este cliente?</p>
+            <input type="hidden" id="deleteClientId">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
+          </div>
+        </div>
       </div>
     </div>
-            <!-- Modal de Notificação - Cliente Adicionado -->
-    <div class="modal fade" id="clientAddedModal" tabindex="-1" aria-labelledby="clientAddedModalLabel" aria-hidden="true">
+    <!-- Modal de Notificação - Cliente Adicionado -->
+    <div class="modal fade" id="clientAddedModal" tabindex="-1" aria-labelledby="clientAddedModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="clientAddedModalLabel">Cliente Adicionado</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  O cliente foi adicionado com sucesso!
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="clientAddedModalLabel">Cliente Adicionado</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            O cliente foi adicionado com sucesso!
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Modal de Notificação - Cliente Editado -->
-    <div class="modal fade" id="clientEditedModal" tabindex="-1" aria-labelledby="clientEditedModalLabel" aria-hidden="true">
+    <div class="modal fade" id="clientEditedModal" tabindex="-1" aria-labelledby="clientEditedModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="clientEditedModalLabel">Cliente Editado</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  O cliente foi editado com sucesso!
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="clientEditedModalLabel">Cliente Editado</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            O cliente foi editado com sucesso!
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Modal de Notificação - Cliente Excluído -->
-    <div class="modal fade" id="clientDeletedModal" tabindex="-1" aria-labelledby="clientDeletedModalLabel" aria-hidden="true">
+    <div class="modal fade" id="clientDeletedModal" tabindex="-1" aria-labelledby="clientDeletedModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -451,23 +465,23 @@
     <!-- Modal de erro CPF já existente -->
     <div class="modal fade" id="cpfErrorModal" tabindex="-1" aria-labelledby="cpfErrorModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="cpfErrorModalLabel">Erro ao adicionar cliente</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  O CPF já está cadastrado. Por favor, insira um CPF diferente.
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cpfErrorModalLabel">Erro ao adicionar cliente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            O CPF já está cadastrado. Por favor, insira um CPF diferente.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
       </div>
     </div>
 
   </main>
-<!-- End #main -->
+  <!-- End #main -->
 
 
   <!-- ======= Footer ======= -->
@@ -484,7 +498,8 @@
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -502,7 +517,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import { firebaseConfig } from "./assets/js/firebaseConfig.js";
 
     const app = initializeApp(firebaseConfig);
@@ -512,73 +527,78 @@
     // Referência para a coleção de clientes
     const clientCollection = collection(db, "clientes");
 
-      // Função para adicionar um novo cliente (se autenticado)
-      async function addClient(event) {
+    // Função para adicionar um novo cliente (se autenticado)
+    async function addClient(event) {
       event.preventDefault();
 
       const user = auth.currentUser;
       if (!user) {
-          alert("Você precisa estar autenticado para adicionar clientes.");
-          window.location.href = "index.html";
-          return;
+        alert("Você precisa estar autenticado para adicionar clientes.");
+        window.location.href = "index.html";
+        return;
       }
 
       const nome = document.getElementById("nome").value;
       const celular = document.getElementById("celular").value;
       const email = document.getElementById("email").value;
       const cpf = document.getElementById("cpf").value;
+      const password = document.getElementById("password").value;
 
       // Verifica se o CPF já existe
       const querySnapshot = await getDocs(clientCollection);
       let cpfExists = false;
 
       querySnapshot.forEach((doc) => {
-          const client = doc.data();
-          if (client.cpf === cpf) {
-              cpfExists = true; // O CPF já existe
-          }
+        const client = doc.data();
+        if (client.cpf === cpf) {
+          cpfExists = true; // O CPF já existe
+        }
       });
 
       if (cpfExists) {
-          // Mostra o modal de CPF duplicado
-          const duplicateModal = new bootstrap.Modal(document.getElementById("cpfErrorModal"));
-          duplicateModal.show();
-          return; // Retorna sem adicionar o cliente
+        // Mostra o modal de CPF duplicado
+        const duplicateModal = new bootstrap.Modal(document.getElementById("cpfErrorModal"));
+        duplicateModal.show();
+        return; // Retorna sem adicionar o cliente
       }
 
       try {
-          await addDoc(clientCollection, {
-              nome: nome,
-              celular: celular,
-              email: email,
-              cpf: cpf,
-              userId: user.uid // Armazena o ID do usuário que adicionou o cliente
-          });
-          document.getElementById("addClientForm").reset();
-          // Mostra o modal de cliente adicionado
-          const addedModal = new bootstrap.Modal(document.getElementById("clientAddedModal"));
-          addedModal.show();
-          loadClients(); // Atualiza a tabela após adicionar um novo cliente
-          // Fecha o modal se estiver utilizando
-          const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
-          if (modal) modal.hide();
+        // Criação do usuário com email e senha
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Adiciona os dados do cliente ao Firestore
+        await addDoc(clientCollection, {
+          nome: nome,
+          celular: celular,
+          email: email,
+          cpf: cpf,
+          userId: userCredential.user.uid // Armazena o ID do usuário criado
+        });
+
+        document.getElementById("addClientForm").reset();
+        // Mostra o modal de cliente adicionado
+        const addedModal = new bootstrap.Modal(document.getElementById("clientAddedModal"));
+        addedModal.show();
+        loadClients(); // Atualiza a tabela após adicionar um novo cliente
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
+        if (modal) modal.hide();
       } catch (error) {
-          console.error("Erro ao adicionar cliente: ", error);
-          alert("Erro ao adicionar cliente.");
+        console.error("Erro ao adicionar cliente: ", error);
+        alert("Erro ao adicionar cliente.");
       }
-  }
+    }
 
     // Função para carregar os clientes e exibi-los na tabela
     async function loadClients() {
-        const querySnapshot = await getDocs(clientCollection);
-        const clientTableBody = document.getElementById("clientTableBody");
-        clientTableBody.innerHTML = ""; // Limpa a tabela antes de adicionar os clientes
+      const querySnapshot = await getDocs(clientCollection);
+      const clientTableBody = document.getElementById("clientTableBody");
+      clientTableBody.innerHTML = ""; // Limpa a tabela antes de adicionar os clientes
 
-        querySnapshot.forEach((doc) => {
-            const client = doc.data();
-            const row = document.createElement("tr");
+      querySnapshot.forEach((doc) => {
+        const client = doc.data();
+        const row = document.createElement("tr");
 
-            row.innerHTML = `
+        row.innerHTML = `
                 <td>${client.nome}</td>
                 <td>${client.celular}</td>
                 <td>${client.email}</td>
@@ -589,97 +609,97 @@
                 </td>
             `;
 
-            clientTableBody.appendChild(row);
-        });
+        clientTableBody.appendChild(row);
+      });
     }
 
-        // Função para editar um cliente
+    // Função para editar um cliente
     function editClient(id, nome, celular, email, cpf) {
-        // Preenche os campos do modal com os dados do cliente
-        document.getElementById("editClientId").value = id;
-        document.getElementById("editNome").value = nome;
-        document.getElementById("editCelular").value = celular;
-        document.getElementById("editEmail").value = email;
-        document.getElementById("editCpf").value = cpf;
+      // Preenche os campos do modal com os dados do cliente
+      document.getElementById("editClientId").value = id;
+      document.getElementById("editNome").value = nome;
+      document.getElementById("editCelular").value = celular;
+      document.getElementById("editEmail").value = email;
+      document.getElementById("editCpf").value = cpf;
 
-        // Abre o modal
-        const editModal = new bootstrap.Modal(document.getElementById("editClientModal"));
-        editModal.show();
+      // Abre o modal
+      const editModal = new bootstrap.Modal(document.getElementById("editClientModal"));
+      editModal.show();
     }
 
     // Evento para submeter o formulário de edição
     document.getElementById("editClientForm").addEventListener("submit", async (event) => {
-        event.preventDefault();
+      event.preventDefault();
 
-        const id = document.getElementById("editClientId").value;
-        const nome = document.getElementById("editNome").value;
-        const celular = document.getElementById("editCelular").value;
-        const email = document.getElementById("editEmail").value;
-        const cpf = document.getElementById("editCpf").value;
+      const id = document.getElementById("editClientId").value;
+      const nome = document.getElementById("editNome").value;
+      const celular = document.getElementById("editCelular").value;
+      const email = document.getElementById("editEmail").value;
+      const cpf = document.getElementById("editCpf").value;
 
-        const clientRef = doc(db, "clientes", id);
-        try {
-            await updateDoc(clientRef, {
-                nome: nome,
-                celular: celular,
-                email: email,
-                cpf: cpf
-            });
-            loadClients(); // Atualiza a tabela após editar o cliente
+      const clientRef = doc(db, "clientes", id);
+      try {
+        await updateDoc(clientRef, {
+          nome: nome,
+          celular: celular,
+          email: email,
+          cpf: cpf
+        });
+        loadClients(); // Atualiza a tabela após editar o cliente
 
-            // Mostra o modal de cliente editado
-            const editedModal = new bootstrap.Modal(document.getElementById("clientEditedModal"));
-            editedModal.show();
+        // Mostra o modal de cliente editado
+        const editedModal = new bootstrap.Modal(document.getElementById("clientEditedModal"));
+        editedModal.show();
 
 
-            // Fecha o modal
-            const editModal = bootstrap.Modal.getInstance(document.getElementById("editClientModal"));
-            if (editModal) editModal.hide();
-        } catch (error) {
-            console.error("Erro ao editar cliente: ", error);
-            alert("Erro ao editar cliente.");
-        }
+        // Fecha o modal
+        const editModal = bootstrap.Modal.getInstance(document.getElementById("editClientModal"));
+        if (editModal) editModal.hide();
+      } catch (error) {
+        console.error("Erro ao editar cliente: ", error);
+        alert("Erro ao editar cliente.");
+      }
     });
 
     // Função para excluir um cliente
     function deleteClient(id) {
-        // Abre o modal de confirmação
-        document.getElementById("deleteClientId").value = id;
-        const deleteModal = new bootstrap.Modal(document.getElementById("deleteClientModal"));
-        deleteModal.show();
+      // Abre o modal de confirmação
+      document.getElementById("deleteClientId").value = id;
+      const deleteModal = new bootstrap.Modal(document.getElementById("deleteClientModal"));
+      deleteModal.show();
     }
 
     // Evento para confirmar a exclusão
     document.getElementById("confirmDeleteButton").addEventListener("click", async () => {
-        const id = document.getElementById("deleteClientId").value;
-        const clientRef = doc(db, "clientes", id);
-        try {
-            await deleteDoc(clientRef);
-            loadClients(); // Atualiza a tabela após excluir o cliente
+      const id = document.getElementById("deleteClientId").value;
+      const clientRef = doc(db, "clientes", id);
+      try {
+        await deleteDoc(clientRef);
+        loadClients(); // Atualiza a tabela após excluir o cliente
 
-            // Mostra o modal de cliente excluído
-            const deletedModal = new bootstrap.Modal(document.getElementById("clientDeletedModal"));
-            deletedModal.show();
+        // Mostra o modal de cliente excluído
+        const deletedModal = new bootstrap.Modal(document.getElementById("clientDeletedModal"));
+        deletedModal.show();
 
-            // Fecha o modal
-            const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteClientModal"));
-            if (deleteModal) deleteModal.hide();
-        } catch (error) {
-            console.error("Erro ao excluir cliente: ", error);
-            alert("Erro ao excluir cliente.");
-        }
+        // Fecha o modal
+        const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteClientModal"));
+        if (deleteModal) deleteModal.hide();
+      } catch (error) {
+        console.error("Erro ao excluir cliente: ", error);
+        alert("Erro ao excluir cliente.");
+      }
     });
 
 
     // Função para fazer logout
     async function logout() {
-        try {
-            await auth.signOut();
-            window.location.href = "index.html"; // Redireciona para o login após o logout
-        } catch (error) {
-            console.error("Erro ao fazer logout:", error);
-            alert("Erro ao fazer logout.");
-        }
+      try {
+        await auth.signOut();
+        window.location.href = "index.html"; // Redireciona para o login após o logout
+      } catch (error) {
+        console.error("Erro ao fazer logout:", error);
+        alert("Erro ao fazer logout.");
+      }
     }
 
     // Adiciona evento de clique ao botão de logout
@@ -691,57 +711,57 @@
 
     // Função para formatar o número de celular
     function formatPhoneNumber(input) {
-        // Remove tudo que não é número
-        const value = input.value.replace(/\D/g, '');
-        
-        // Formata o número no formato (##) #####-####
-        if (value.length <= 2) {
-            input.value = value.replace(/(\d{0})(\d{0,2})/, '($2');
-        } else if (value.length <= 7) {
-            input.value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-        } else {
-            input.value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-        }
+      // Remove tudo que não é número
+      const value = input.value.replace(/\D/g, '');
+
+      // Formata o número no formato (##) #####-####
+      if (value.length <= 2) {
+        input.value = value.replace(/(\d{0})(\d{0,2})/, '($2');
+      } else if (value.length <= 7) {
+        input.value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+      } else {
+        input.value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+      }
     }
 
     // Função para formatar o CPF
     function formatCpf(input) {
-        // Remove tudo que não é número
-        const value = input.value.replace(/\D/g, '');
-        
-        // Formata o CPF no formato ###.###.###-##
-        if (value.length <= 3) {
-            input.value = value.replace(/(\d{0,3})/, '$1');
-        } else if (value.length <= 6) {
-            input.value = value.replace(/(\d{3})(\d{0,3})/, '$1.$2');
-        } else if (value.length <= 9) {
-            input.value = value.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2-$3');
-        } else {
-            input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
-        }
+      // Remove tudo que não é número
+      const value = input.value.replace(/\D/g, '');
+
+      // Formata o CPF no formato ###.###.###-##
+      if (value.length <= 3) {
+        input.value = value.replace(/(\d{0,3})/, '$1');
+      } else if (value.length <= 6) {
+        input.value = value.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+      } else if (value.length <= 9) {
+        input.value = value.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2-$3');
+      } else {
+        input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+      }
     }
 
     // Adiciona o evento de input ao campo de celular
     document.getElementById("celular").addEventListener("input", function () {
-        formatPhoneNumber(this);
+      formatPhoneNumber(this);
     });
 
     // Adiciona o evento de input ao campo de CPF
     document.getElementById("cpf").addEventListener("input", function () {
-        formatCpf(this);
+      formatCpf(this);
     });
 
     // Carregar os clientes ao abrir a página e verificar autenticação
     document.addEventListener("DOMContentLoaded", () => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log("Usuário autenticado:", user.email);
-                loadClients(); // Carrega clientes se o usuário estiver autenticado
-            } else {
-                console.log("Usuário não autenticado.");
-                window.location.href = "index.html"; // Redireciona se não autenticado
-            }
-        });
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("Usuário autenticado:", user.email);
+          loadClients(); // Carrega clientes se o usuário estiver autenticado
+        } else {
+          console.log("Usuário não autenticado.");
+          window.location.href = "index.html"; // Redireciona se não autenticado
+        }
+      });
     });
 
     // Adicionar evento de submissão no formulário
@@ -749,32 +769,32 @@
 
     // Função para filtrar clientes
     function filterClients() {
-        const filter = document.getElementById("filterInput").value.toLowerCase();
-        const clientTableBody = document.getElementById("clientTableBody");
-        const rows = clientTableBody.getElementsByTagName("tr");
+      const filter = document.getElementById("filterInput").value.toLowerCase();
+      const clientTableBody = document.getElementById("clientTableBody");
+      const rows = clientTableBody.getElementsByTagName("tr");
 
-        for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName("td");
-            let found = false;
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName("td");
+        let found = false;
 
-            for (let j = 0; j < cells.length; j++) {
-                if (cells[j].innerText.toLowerCase().includes(filter)) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (found) {
-                rows[i].style.display = "";
-            } else {
-                rows[i].style.display = "none";
-            }
+        for (let j = 0; j < cells.length; j++) {
+          if (cells[j].innerText.toLowerCase().includes(filter)) {
+            found = true;
+            break;
+          }
         }
+
+        if (found) {
+          rows[i].style.display = "";
+        } else {
+          rows[i].style.display = "none";
+        }
+      }
     }
 
     // Adiciona evento de input ao campo de filtro
     document.getElementById("filterInput").addEventListener("input", filterClients);
-</script>
+  </script>
 
 </body>
 
