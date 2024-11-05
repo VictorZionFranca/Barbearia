@@ -46,7 +46,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.7/main.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/locale-all@6.1.7/main.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.7/main.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/calendario.css">
 
 </head>
 
@@ -263,31 +262,36 @@
       <div id="calendar"></div>
     </div>
 
-    <!-- Modal de Agendamento -->
     <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel"
       aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="appointmentModalLabel">Agendar Atendimento</h5>
+            <h5 class="modal-title" id="appointmentModalLabel">Agendar Corte</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="appointmentForm">
               <div class="mb-3">
                 <label for="client" class="form-label">Cliente</label>
-                <input type="text" class="form-control" id="client" required>
+                <select id="client" class="form-select" required>
+                  <option value="" disabled selected>Selecione um cliente</option>
+                </select>
               </div>
               <div class="mb-3">
-                <label for="barber" class="form-label">Barbeiro</label>
-                <input type="text" class="form-control" id="barber" required>
+                <label for="barber" class="form-label">Colaborador</label>
+                <select id="barber" class="form-select" required>
+                  <option value="" disabled selected>Selecione um colaborador</option>
+                </select>
               </div>
               <div class="mb-3">
                 <label for="service" class="form-label">Serviço</label>
-                <input type="text" class="form-control" id="service" required>
+                <select id="service" class="form-select" required>
+                  <option value="" disabled selected>Selecione um serviço</option>
+                </select>
               </div>
-              <button type="submit" class="btn btn-primary">Salvar</button>
               <button type="button" class="btn btn-secondary" id="cancelButton">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
             </form>
           </div>
         </div>
@@ -393,22 +397,21 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     import { firebaseConfig } from "./assets/js/firebaseConfig.js";
 
     // Inicializa o Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     // Verifica se o usuário está autenticado ao carregar a página
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        // Se o usuário não estiver autenticado, redireciona para a página de login
         window.location.replace("index.html");
       } else {
-        // O usuário está autenticado
         console.log("Usuário autenticado:", user.email);
-        // Impede que o usuário volte para a página de login
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
           history.pushState(null, null, location.href);
@@ -419,23 +422,77 @@
     // Função de logout
     function logout() {
       signOut(auth).then(() => {
-        // Redireciona para a página de login após o logout
         window.location.replace("index.html");
       }).catch((error) => {
         console.error("Erro ao fazer logout:", error);
       });
     }
 
-    // Adiciona o evento de logout a um botão, se necessário
+    // Adiciona o evento de logout a um botão
     document.getElementById('logoutButton').addEventListener('click', logout);
-  </script>
 
-  <!-- Codigo do Calendário -->
-  <script>
-    let currentEvent; // Variável para armazenar o evento atual a ser manipulado
+    // Carrega os clientes, colaboradores e serviços do Firestore
+    async function loadOptions() {
+      // Limpa as opções existentes
+      document.getElementById("client").innerHTML = '<option value="">Selecione um cliente</option>';
+      document.getElementById("barber").innerHTML = '<option value="">Selecione um colaborador</option>';
+      document.getElementById("service").innerHTML = '<option value="">Selecione um serviço</option>';
 
-    document.addEventListener('DOMContentLoaded', function () {
+      const clientsSnapshot = await getDocs(collection(db, "clientes"));
+      const clientsSelect = document.getElementById("client");
+      clientsSnapshot.forEach(doc => {
+        const option = document.createElement("option");
+        option.value = doc.id; // Armazena o ID do cliente
+        option.textContent = doc.data().nome; // Assume que o campo do nome é 'nome'
+        clientsSelect.appendChild(option);
+      });
+
+      const barbersSnapshot = await getDocs(collection(db, "colaboradores"));
+      const barbersSelect = document.getElementById("barber");
+      barbersSnapshot.forEach(doc => {
+        const option = document.createElement("option");
+        option.value = doc.id; // Armazena o ID do colaborador
+        option.textContent = doc.data().nome; // Assume que o campo do nome é 'nome'
+        barbersSelect.appendChild(option);
+      });
+
+      const servicesSnapshot = await getDocs(collection(db, "servicos"));
+      const servicesSelect = document.getElementById("service");
+      servicesSnapshot.forEach(doc => {
+        const option = document.createElement("option");
+        option.value = doc.id; // Armazena o ID do serviço
+        option.textContent = doc.data().nome; // Assume que o campo do nome é 'nome'
+        servicesSelect.appendChild(option);
+      });
+    }
+
+    // Carrega os eventos do Firestore e adiciona ao calendário
+    async function loadEventsFromFirestore(calendar) {
+      const eventsSnapshot = await getDocs(collection(db, "agendamentos"));
+      eventsSnapshot.forEach(doc => {
+        const data = doc.data();
+        // Adiciona cada evento ao calendário
+        calendar.addEvent({
+          id: doc.id, // Armazena o ID do documento para referência
+          title: `${data.serviceName} - ${data.clientName} (${data.barberName})`, // Formato do título
+          start: data.start.toDate(), // Converte a data do Firestore para Date
+          end: data.end.toDate(), // Converte a data do Firestore para Date
+          extendedProps: {
+            completed: data.completed || false // Status de conclusão
+          }
+        });
+      });
+    }
+
+    // Chama a função para carregar as opções quando a página carrega
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadOptions(); // Carrega opções
+      initializeCalendar(); // Inicializa o calendário
+    });
+
+    function initializeCalendar() {
       var calendarEl = document.getElementById('calendar');
+      var currentEvent; // Declaração da variável atual do evento
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'pt-br',
@@ -453,123 +510,150 @@
         initialDate: new Date(),
         navLinks: true,
         selectable: true,
-        editable: true,
+        editable: false,
         dayMaxEvents: true,
-        slotDuration: '00:30:00',
+        slotDuration: '00:30:00', // Intervalo de 15 minutos
         slotLabelInterval: '00:30:00',
+        allday: false,
         slotLabelFormat: {
           hour: 'numeric',
           minute: '2-digit',
-          meridiem: false
+          meridiem: false,
         },
         slotMinTime: '08:00:00',
         slotMaxTime: '20:00:00',
-        events: [
-          {
-            startTime: '12:00',
-            endTime: '13:00',
-            display: 'background',
-            backgroundColor: '#A9A9A9'
-          }
-        ],
         expandRows: true,
-
-        dayCellDidMount: function (info) {
-          const today = new Date().setHours(0, 0, 0, 0);
-
-          if (info.date.getTime() === today) {
-            if (calendar.view.type === 'dayGridMonth') {
-              info.el.style.backgroundColor = '#00BFFF';
-            } else if (calendar.view.type === 'timeGridWeek' || calendar.view.type === 'timeGridDay') {
-              info.el.style.backgroundColor = '#E0FFFF';
-            }
-          }
-        },
-
-        allDaySlot: false,
-        eventDurationEditable: true,
-
         select: function (arg) {
           openModal(arg.start, arg.end);
           calendar.unselect();
         },
-
         eventClick: function (info) {
           currentEvent = info.event;
           openDetailsModal(currentEvent);
+        },
+        eventRender: function (info) {
+          // Se o evento é considerado como allDay, oculte-o
+          if (info.event.allDay) {
+            info.el.style.display = 'none';
+          }
         }
       });
 
       calendar.render();
+
+      // Carrega os eventos do Firestore no calendário
+      loadEventsFromFirestore(calendar);
 
       function openModal(start, end) {
         var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
         modal.show();
         document.getElementById("appointmentForm").dataset.start = start.toISOString();
         document.getElementById("appointmentForm").dataset.end = end.toISOString();
+        loadOptions(); // Recarrega as opções sempre que o modal é aberto
       }
 
       function closeModal() {
         var modal = bootstrap.Modal.getInstance(document.getElementById('appointmentModal'));
         modal.hide();
         document.getElementById("appointmentForm").reset();
+        loadOptions(); // Recarrega as opções ao fechar o modal
       }
 
       function openDetailsModal(event) {
-        document.getElementById("modalClient").innerText = event.title.split(' - ')[1].split(' (')[0]; // Extraindo o nome do cliente
-        document.getElementById("modalBarber").innerText = event.title.split(' (')[1].slice(0, -1); // Extraindo o barbeiro
-        document.getElementById("modalService").innerText = event.title.split(' - ')[0]; // Extraindo o serviço
-        document.getElementById("modalDateTime").innerText = `${event.start.toLocaleString()} - ${event.end.toLocaleString()}`; // Exibindo data e hora
+        // A título do evento está no formato 'Serviço: [serviceName] - Cliente: [clientName] - Barbeiro: [barberName]'
+        const eventTitle = event.title.split(' - ');
 
-        var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-        detailsModal.show();
+        // Garantir que o título tenha a estrutura esperada
+        if (eventTitle.length === 3) {
+          const serviceName = eventTitle[0].split(': ')[1]; // Serviço
+          const clientName = eventTitle[1]; // Cliente
+          const barberName = eventTitle[2].slice(0,); // Barbeiro (remover o parêntese final)
+
+          document.getElementById("modalClient").innerText = clientName;
+          document.getElementById("modalBarber").innerText = barberName;
+          document.getElementById("modalService").innerText = serviceName;
+          document.getElementById("modalDateTime").innerText = `${event.start.toLocaleString()} - ${event.end.toLocaleString()}`;
+
+          var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+          detailsModal.show();
+        } else {
+          console.error("Título do evento não está no formato esperado:", event.title);
+        }
       }
 
-      document.getElementById("deleteEventButton").addEventListener("click", function () {
+      document.getElementById("deleteEventButton").addEventListener("click", async function () {
         if (currentEvent) {
-          currentEvent.remove();
+          await deleteDoc(doc(db, "agendamentos", currentEvent.id)); // Remove do Firestore
+          currentEvent.remove(); // Remove do calendário
           closeDetailsModal();
         }
       });
 
-      document.getElementById("completeEventButton").addEventListener("click", function () {
+      document.getElementById("completeEventButton").addEventListener("click", async function () {
         if (currentEvent) {
-          currentEvent.setProp('backgroundColor', '#32CD32'); // Verde para corte concluído
-          currentEvent.setExtendedProp('completed', true); // Define o evento como concluído
-        }
-        closeDetailsModal();
-      });
+          const eventId = currentEvent.id; // Pega o ID do evento
+          await updateDoc(doc(db, "agendamentos", eventId), {
+            completed: true // Atualiza o status de concluído
+          });
 
-      function closeDetailsModal() {
-        var modal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
-        modal.hide();
-      }
+          currentEvent.setProp('backgroundColor', '#32CD32'); // Altera a cor do evento no calendário para indicar conclusão
+          currentEvent.setExtendedProp('completed', true);
+          closeDetailsModal();
+        }
+      });
 
       document.getElementById("cancelButton").addEventListener("click", function () {
         closeModal();
       });
 
-      document.getElementById("appointmentForm").addEventListener("submit", function (event) {
+      document.getElementById("appointmentForm").addEventListener("submit", async function (event) {
         event.preventDefault();
-        var client = document.getElementById("client").value;
-        var barber = document.getElementById("barber").value;
-        var service = document.getElementById("service").value;
+        var clientId = document.getElementById("client").value;
+        var barberId = document.getElementById("barber").value;
+        var serviceId = document.getElementById("service").value;
         var start = new Date(this.dataset.start);
         var end = new Date(this.dataset.end);
 
-        calendar.addEvent({
-          title: `${service} - ${client} (${barber})`,
-          start: start,
-          end: end,
-          allDay: false,
-          extendedProps: {
-            completed: false // Define o evento como não concluído inicialmente
-          }
-        });
+        // Busca os documentos do cliente, colaborador e serviço
+        const [clientDoc, barberDoc, serviceDoc] = await Promise.all([
+          getDoc(doc(db, "clientes", clientId)),
+          getDoc(doc(db, "colaboradores", barberId)),
+          getDoc(doc(db, "servicos", serviceId))
+        ]);
 
-        closeModal();
+        if (clientDoc.exists() && barberDoc.exists() && serviceDoc.exists()) {
+          const serviceDuration = serviceDoc.data().duracao; // Duração do serviço
+          end = new Date(start.getTime() + serviceDuration * 60000); // Adiciona a duração ao horário de início
+
+          const newEvent = {
+            clientName: clientDoc.data().nome,
+            barberName: barberDoc.data().nome,
+            serviceName: serviceDoc.data().nome,
+            start: start,
+            end: end,
+            completed: false
+          };
+
+          const docRef = await addDoc(collection(db, "agendamentos"), newEvent); // Salva o agendamento no Firestore
+          calendar.addEvent({
+            id: docRef.id,
+            title: `Serviço: ${newEvent.serviceName} - Cliente: ${newEvent.clientName} - Barbeiro: ${newEvent.barberName}`,
+            start: start,
+            end: end,
+            allday: false,
+          });
+
+          closeModal(); // Fecha o modal
+        } else {
+          console.error("Um ou mais documentos não existem.");
+        }
       });
-    });
+    }
+
+    function closeDetailsModal() {
+      var detailsModal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
+      detailsModal.hide();
+    }
   </script>
 
 </body>
