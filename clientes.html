@@ -56,87 +56,6 @@
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
-        <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li><!-- End Search Icon-->
-
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span>
-          </a><!-- End Notification Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              You have 4 new notifications
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-              <a href="#">Show all notifications</a>
-            </li>
-
-          </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
-
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
@@ -372,11 +291,11 @@
               </div>
               <div class="mb-3">
                 <label for="editEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="editEmail" required>
+                <input type="email" class="form-control-plaintext" id="editEmail" readonly>
               </div>
               <div class="mb-3">
                 <label for="editCpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="editCpf" maxlength="14" required>
+                <input type="text" class="form-control-plaintext" id="editCpf" maxlength="14" readonly>
               </div>
               <button type="submit" class="btn btn-primary">Salvar</button>
             </form>
@@ -480,6 +399,25 @@
       </div>
     </div>
 
+    <!-- Modal de erro Email já existente -->
+    <div class="modal fade" id="emailErrorModal" tabindex="-1" aria-labelledby="emailErrorModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="emailErrorModalLabel">Erro ao adicionar cliente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            O Email já está cadastrado. Por favor, insira um Email diferente.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
   <!-- End #main -->
 
@@ -544,21 +482,32 @@
       const cpf = document.getElementById("cpf").value;
       const password = document.getElementById("password").value;
 
-      // Verifica se o CPF já existe
+      // Verifica se o CPF ou Email já existem
       const querySnapshot = await getDocs(clientCollection);
       let cpfExists = false;
+      let emailExists = false;
 
       querySnapshot.forEach((doc) => {
         const client = doc.data();
         if (client.cpf === cpf) {
           cpfExists = true; // O CPF já existe
         }
+        if (client.email === email) {
+          emailExists = true; // O Email já existe
+        }
       });
 
       if (cpfExists) {
         // Mostra o modal de CPF duplicado
-        const duplicateModal = new bootstrap.Modal(document.getElementById("cpfErrorModal"));
-        duplicateModal.show();
+        const duplicateCpfModal = new bootstrap.Modal(document.getElementById("cpfErrorModal"));
+        duplicateCpfModal.show();
+        return; // Retorna sem adicionar o cliente
+      }
+
+      if (emailExists) {
+        // Mostra o modal de Email duplicado
+        const duplicateEmailModal = new bootstrap.Modal(document.getElementById("emailErrorModal"));
+        duplicateEmailModal.show();
         return; // Retorna sem adicionar o cliente
       }
 

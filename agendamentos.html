@@ -65,87 +65,6 @@
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
-        <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li><!-- End Search Icon-->
-
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span>
-          </a><!-- End Notification Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              You have 4 new notifications
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-              <a href="#">Show all notifications</a>
-            </li>
-
-          </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
-
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
@@ -301,8 +220,9 @@
     </div><!-- End Page Title -->
 
     <!-- Botão de Ajuda -->
-    <button type="button" class="btn btn-info position-absolute" style="right: 40px; top: 100px; display: none !important;" data-bs-toggle="modal"
-      data-bs-target="#helpModal" title="Funcionamento do Calendario">
+    <button type="button" class="btn btn-info position-absolute"
+      style="right: 40px; top: 100px; display: none !important;" data-bs-toggle="modal" data-bs-target="#helpModal"
+      title="Funcionamento do Calendario">
       <i class="bi bi-question-circle"></i>
     </button>
 
@@ -511,146 +431,146 @@
   </script>
 
   <!-- Codigo do Calendário -->
-<script>
-  let currentEvent; // Variável para armazenar o evento atual a ser manipulado
+  <script>
+    let currentEvent; // Variável para armazenar o evento atual a ser manipulado
 
-  document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
-          locale: 'pt-br',
-          headerToolbar: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          },
-          buttonText: {
-              today: 'Hoje',
-              month: 'Mês',
-              week: 'Semana',
-              day: 'Dia'
-          },
-          initialDate: new Date(),
-          navLinks: true,
-          selectable: true,
-          editable: true,
-          dayMaxEvents: true,
-          slotDuration: '00:30:00',
-          slotLabelInterval: '00:30:00',
-          slotLabelFormat: {
-              hour: 'numeric',
-              minute: '2-digit',
-              meridiem: false
-          },
-          slotMinTime: '08:00:00',
-          slotMaxTime: '20:00:00',
-          events: [
-              {
-                  startTime: '12:00',
-                  endTime: '13:00',
-                  display: 'background',
-                  backgroundColor: '#A9A9A9'
-              }
-          ],
-          expandRows: true,
-
-          dayCellDidMount: function (info) {
-              const today = new Date().setHours(0, 0, 0, 0);
-
-              if (info.date.getTime() === today) {
-                  if (calendar.view.type === 'dayGridMonth') {
-                      info.el.style.backgroundColor = '#00BFFF';
-                  } else if (calendar.view.type === 'timeGridWeek' || calendar.view.type === 'timeGridDay') {
-                      info.el.style.backgroundColor = '#E0FFFF';
-                  }
-              }
-          },
-
-          allDaySlot: false,
-          eventDurationEditable: true,
-
-          select: function (arg) {
-              openModal(arg.start, arg.end);
-              calendar.unselect();
-          },
-
-          eventClick: function (info) {
-              currentEvent = info.event;
-              openDetailsModal(currentEvent);
+        locale: 'pt-br',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: {
+          today: 'Hoje',
+          month: 'Mês',
+          week: 'Semana',
+          day: 'Dia'
+        },
+        initialDate: new Date(),
+        navLinks: true,
+        selectable: true,
+        editable: true,
+        dayMaxEvents: true,
+        slotDuration: '00:30:00',
+        slotLabelInterval: '00:30:00',
+        slotLabelFormat: {
+          hour: 'numeric',
+          minute: '2-digit',
+          meridiem: false
+        },
+        slotMinTime: '08:00:00',
+        slotMaxTime: '20:00:00',
+        events: [
+          {
+            startTime: '12:00',
+            endTime: '13:00',
+            display: 'background',
+            backgroundColor: '#A9A9A9'
           }
+        ],
+        expandRows: true,
+
+        dayCellDidMount: function (info) {
+          const today = new Date().setHours(0, 0, 0, 0);
+
+          if (info.date.getTime() === today) {
+            if (calendar.view.type === 'dayGridMonth') {
+              info.el.style.backgroundColor = '#00BFFF';
+            } else if (calendar.view.type === 'timeGridWeek' || calendar.view.type === 'timeGridDay') {
+              info.el.style.backgroundColor = '#E0FFFF';
+            }
+          }
+        },
+
+        allDaySlot: false,
+        eventDurationEditable: true,
+
+        select: function (arg) {
+          openModal(arg.start, arg.end);
+          calendar.unselect();
+        },
+
+        eventClick: function (info) {
+          currentEvent = info.event;
+          openDetailsModal(currentEvent);
+        }
       });
 
       calendar.render();
 
       function openModal(start, end) {
-          var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-          modal.show();
-          document.getElementById("appointmentForm").dataset.start = start.toISOString();
-          document.getElementById("appointmentForm").dataset.end = end.toISOString();
+        var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+        modal.show();
+        document.getElementById("appointmentForm").dataset.start = start.toISOString();
+        document.getElementById("appointmentForm").dataset.end = end.toISOString();
       }
 
       function closeModal() {
-          var modal = bootstrap.Modal.getInstance(document.getElementById('appointmentModal'));
-          modal.hide();
-          document.getElementById("appointmentForm").reset();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('appointmentModal'));
+        modal.hide();
+        document.getElementById("appointmentForm").reset();
       }
 
       function openDetailsModal(event) {
-          document.getElementById("modalClient").innerText = event.title.split(' - ')[1].split(' (')[0]; // Extraindo o nome do cliente
-          document.getElementById("modalBarber").innerText = event.title.split(' (')[1].slice(0, -1); // Extraindo o barbeiro
-          document.getElementById("modalService").innerText = event.title.split(' - ')[0]; // Extraindo o serviço
-          document.getElementById("modalDateTime").innerText = `${event.start.toLocaleString()} - ${event.end.toLocaleString()}`; // Exibindo data e hora
+        document.getElementById("modalClient").innerText = event.title.split(' - ')[1].split(' (')[0]; // Extraindo o nome do cliente
+        document.getElementById("modalBarber").innerText = event.title.split(' (')[1].slice(0, -1); // Extraindo o barbeiro
+        document.getElementById("modalService").innerText = event.title.split(' - ')[0]; // Extraindo o serviço
+        document.getElementById("modalDateTime").innerText = `${event.start.toLocaleString()} - ${event.end.toLocaleString()}`; // Exibindo data e hora
 
-          var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-          detailsModal.show();
+        var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        detailsModal.show();
       }
 
       document.getElementById("deleteEventButton").addEventListener("click", function () {
-          if (currentEvent) {
-              currentEvent.remove();
-              closeDetailsModal();
-          }
+        if (currentEvent) {
+          currentEvent.remove();
+          closeDetailsModal();
+        }
       });
 
       document.getElementById("completeEventButton").addEventListener("click", function () {
-          if (currentEvent) {
-              currentEvent.setProp('backgroundColor', '#32CD32'); // Verde para corte concluído
-              currentEvent.setExtendedProp('completed', true); // Define o evento como concluído
-          }
-          closeDetailsModal();
+        if (currentEvent) {
+          currentEvent.setProp('backgroundColor', '#32CD32'); // Verde para corte concluído
+          currentEvent.setExtendedProp('completed', true); // Define o evento como concluído
+        }
+        closeDetailsModal();
       });
 
       function closeDetailsModal() {
-          var modal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
-          modal.hide();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
+        modal.hide();
       }
 
       document.getElementById("cancelButton").addEventListener("click", function () {
-          closeModal();
+        closeModal();
       });
 
       document.getElementById("appointmentForm").addEventListener("submit", function (event) {
-          event.preventDefault();
-          var client = document.getElementById("client").value;
-          var barber = document.getElementById("barber").value;
-          var service = document.getElementById("service").value;
-          var start = new Date(this.dataset.start);
-          var end = new Date(this.dataset.end);
+        event.preventDefault();
+        var client = document.getElementById("client").value;
+        var barber = document.getElementById("barber").value;
+        var service = document.getElementById("service").value;
+        var start = new Date(this.dataset.start);
+        var end = new Date(this.dataset.end);
 
-          calendar.addEvent({
-              title: `${service} - ${client} (${barber})`,
-              start: start,
-              end: end,
-              allDay: false,
-              extendedProps: {
-                  completed: false // Define o evento como não concluído inicialmente
-              }
-          });
+        calendar.addEvent({
+          title: `${service} - ${client} (${barber})`,
+          start: start,
+          end: end,
+          allDay: false,
+          extendedProps: {
+            completed: false // Define o evento como não concluído inicialmente
+          }
+        });
 
-          closeModal();
+        closeModal();
       });
-  });
-</script>
+    });
+  </script>
 
 </body>
 
