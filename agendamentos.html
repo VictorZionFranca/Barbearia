@@ -27,7 +27,7 @@
   <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
@@ -262,6 +262,35 @@
       <div id="calendar"></div>
     </div>
 
+    <!-- Div externa com margin-top -->
+    <div class="mt-5">
+
+      <!-- Select para escolher um barbeiro -->
+      <select id="barbeiroFilter" class="p-2 border rounded">
+        <option value="">Todos os Barbeiros</option>
+        <!-- As opções dos barbeiros serão preenchidas dinamicamente -->
+      </select>
+
+      <!-- A tabela onde os agendamentos serão exibidos -->
+      <div class="table-responsive">
+        <table id="agendaTable" class="table table-striped table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Barbeiro</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Data / Hora</th>
+              <th scope="col">Serviço</th>
+              <th scope="col">Agendamento</th>
+            </tr>
+          </thead>
+          <tbody id="agendaTableBody">
+            <!-- As linhas de agendamentos serão preenchidas dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
     <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel"
       aria-hidden="true">
       <div class="modal-dialog">
@@ -476,6 +505,8 @@
         const data = doc.data();
 
         // Monta o título diretamente usando os dados do evento do Firestore
+        const eventColor = data.completed ? '#32CD32' : '#5C5C5C'; // Se concluído, verde, caso contrário, cinza
+
         calendar.addEvent({
           id: doc.id, // Armazena o ID do documento para referência
           title: `Serviço: ${data.serviceName} - Cliente: ${data.clientName} - Barbeiro: ${data.barberName}`, // Formato do título
@@ -484,6 +515,7 @@
           extendedProps: {
             completed: data.completed || false // Status de conclusão
           },
+          backgroundColor: eventColor, // Aplica a cor dependendo do estado de conclusão
           allDay: false
         });
       });
@@ -618,8 +650,8 @@
         // Garantir que o título tenha a estrutura esperada
         if (eventTitle.length === 3) {
           const serviceName = eventTitle[0].split(': ')[1]; // Serviço
-          const clientName = eventTitle[1]; // Cliente
-          const barberName = eventTitle[2].slice(0,); // Barbeiro (remover o parêntese final)
+          const clientName = eventTitle[1].split(': ')[1]; // Cliente
+          const barberName = eventTitle[2].split(': ')[1]; // Barbeiro (remover o parêntese final)
 
           document.getElementById("modalClient").innerText = clientName;
           document.getElementById("modalBarber").innerText = barberName;
@@ -638,6 +670,7 @@
           await deleteDoc(doc(db, "agendamentos", currentEvent.id)); // Remove do Firestore
           currentEvent.remove(); // Remove do calendário
           closeDetailsModal();
+          location.reload(); // Recarrega a página 
         }
       });
 
@@ -652,6 +685,9 @@
           currentEvent.setExtendedProp('completed', true);
           closeDetailsModal();
         }
+        
+          location.reload(); // Recarrega a página 
+        
       });
 
       document.getElementById("cancelButton").addEventListener("click", function () {
@@ -699,7 +735,11 @@
           closeModal(); // Fecha o modal
         } else {
           console.error("Um ou mais documentos não existem.");
-        }
+        };
+
+        setTimeout(() => {
+          location.reload(); // Recarrega a página após o delay
+        }, 1800);
       });
     }
 
@@ -707,11 +747,185 @@
       var detailsModal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
       detailsModal.hide();
     }
-    
+
+    // Função para filtrar agendamentos com base no barbeiro selecionado
+    async function filterBarbeiros() {
+      const selectedBarbeiro = document.getElementById("barbeiroFilter").value;
+      console.log("Barbeiro selecionado:", selectedBarbeiro);  // Depuração
+
+      // Verifica se o valor selecionado é válido (não vazio ou undefined)
+      if (!selectedBarbeiro || selectedBarbeiro === "undefined") {
+        // Se não houver barbeiro selecionado, exibe todos os agendamentos
+        await displayAgendamentos();
+        return;
+      }
+
+      const selectedBarbeiroLowerCase = selectedBarbeiro.toLowerCase();
+      const agendaTableBody = document.getElementById("agendaTableBody");
+      agendaTableBody.innerHTML = ""; // Limpa a tabela antes de repopulá-la
+
+      // Recupera os agendamentos do Firebase
+      const agendamentosSnapshot = await getDocs(collection(db, "agendamentos"));
+      const agendamentos = agendamentosSnapshot.docs.map(doc => doc.data());
+      console.log("Agendamentos recuperados:", agendamentos); // Depuração
+
+      // Ordena os agendamentos pela data de início (start)
+      agendamentos.sort((a, b) => a.start.toDate() - b.start.toDate()); // Ordem crescente pela data
+
+      // Filtra e exibe os agendamentos
+      agendamentos.forEach(agendamento => {
+        const { barberName, clientName, serviceName, start, end } = agendamento;
+        console.log("Agendamento:", agendamento);  // Depuração
+
+        // Verifica se o barbeiro do agendamento corresponde ao selecionado
+        if (barberName && barberName.toLowerCase().includes(selectedBarbeiroLowerCase)) {
+          const row = document.createElement("tr");
+
+          // Exibe o nome do barbeiro
+          const barbeiroCell = document.createElement("td");
+          barbeiroCell.textContent = barberName;
+          row.appendChild(barbeiroCell);
+
+          // Exibe o nome do cliente
+          const clienteCell = document.createElement("td");
+          clienteCell.textContent = clientName;
+          row.appendChild(clienteCell);
+
+          // Exibe a data de início e fim (data + hora)
+          const dataCell = document.createElement("td");
+          const startDate = start.toDate(); // Converte o timestamp
+          const endDate = end.toDate(); // Converte o timestamp
+          dataCell.textContent = `${formatDateTime(startDate)} - ${formatTime(endDate)}`; // Exibe data e hora no formato 06/11/2024 14:30 - 15:00
+          row.appendChild(dataCell);
+
+          // Exibe o nome do serviço
+          const servicoCell = document.createElement("td");
+          servicoCell.textContent = serviceName;
+          row.appendChild(servicoCell);
+
+          // Exibe o estado do agendamento (concluído ou pendente)
+          const estadoCell = document.createElement("td");
+          estadoCell.textContent = agendamento.completed ? 'Concluído' : 'Pendente';
+          row.appendChild(estadoCell);
+          
+          // Se o agendamento estiver concluído, adiciona a classe 'completed' à linha
+          if (agendamento.completed) {
+            row.classList.add("completed"); // Adiciona a classe 'completed' (verde)
+          }
+
+          // Adiciona a linha na tabela
+          agendaTableBody.appendChild(row);
+        }
+      });
+    }
+
+    // Função para exibir agendamentos na tabela
+    async function displayAgendamentos() {
+      const agendaTableBody = document.getElementById("agendaTableBody");
+      agendaTableBody.innerHTML = ""; // Limpa a tabela antes de repopulá-la
+
+      // Recupera os agendamentos do Firebase
+      const agendamentosSnapshot = await getDocs(collection(db, "agendamentos"));
+      const agendamentos = agendamentosSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      // Ordena os agendamentos pela data de início
+      agendamentos.sort((a, b) => a.start.seconds - b.start.seconds);
+
+      // Exibe os agendamentos na tabela
+      agendamentos.forEach(agendamento => {
+        const row = document.createElement("tr");
+
+        // Adiciona as células à linha
+        row.innerHTML = `
+      <td>${agendamento.barberName}</td>
+      <td>${agendamento.clientName}</td>
+      <td>${formatDateTime(new Date(agendamento.start.seconds * 1000))} - ${formatTime(new Date(agendamento.end.seconds * 1000))}</td>
+      <td>${agendamento.serviceName}</td>
+      <td>${agendamento.completed ? 'Concluído' : 'Pendente'}</td>
+    `;
+
+        // Aplica o fundo verde se o agendamento estiver concluído
+        if (agendamento.completed) {
+          row.classList.add("completed"); // Verde
+        }
+
+        // Adiciona a linha na tabela
+        agendaTableBody.appendChild(row);
+      });
+    }
+
+    // Função para formatar a data e hora no formato 06/11/2024 14:30
+    function formatDateTime(date) {
+      const day = date.getDate().toString().padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      const minutes = date.getMinutes().toString().padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      return `${day}/${month}/${year} ${hours}:${minutes}`; // Retorna no formato 06/11/2024 14:30
+    }
+
+    // Função para formatar o horário no formato 14:30
+    function formatTime(date) {
+      const hours = date.getHours().toString().padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      const minutes = date.getMinutes().toString().padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      return `${hours}:${minutes}`; // Retorna no formato 14:30
+    }
+
+    // Função para preencher o select de barbeiros com dados do Firebase
+    async function loadBarbeiros() {
+      const barbeiroSelect = document.getElementById("barbeiroFilter");
+
+      // Recupera os colaboradores (barbeiros) do Firebase
+      const colaboradoresSnapshot = await getDocs(collection(db, "colaboradores"));
+      const colaboradores = colaboradoresSnapshot.docs.map(doc => doc.data());
+
+      console.log("Barbeiros recuperados:", colaboradores); // Depuração
+
+      // Preenche o select com os barbeiros
+      colaboradores.forEach(colaborador => {
+        const option = document.createElement("option");
+        option.value = colaborador.nome.toLowerCase(); // Use o nome do barbeiro
+        option.textContent = colaborador.nome; // Exibe o nome do barbeiro
+        barbeiroSelect.appendChild(option);
+      });
+    }
+
+    // Adiciona evento de mudança ao select de barbeiros
+    document.getElementById("barbeiroFilter").addEventListener("change", filterBarbeiros);
+
+    // Carrega os barbeiros e agendamentos quando a página carregar
+    window.onload = async () => {
+      await loadBarbeiros(); // Carrega os barbeiros
+      await displayAgendamentos(); // Exibe todos os agendamentos inicialmente
+    };
+
   </script>
+
+  <!-- estilo para o calendário / deixa os espaços dos horários maiores -->
   <style>
     .fc .fc-timegrid-slot {
       height: 1.7em;
+    }
+
+    .fc-timegrid-event .fc-event-main {
+      padding-left: 10px;
+      padding-top: 2px;
+    }
+
+    .fc-v-event {
+      border: none;
+    }
+
+    .fc-timegrid-event,
+    .fc-timegrid-more-link {
+      font-size: 18px;
+    }
+
+    tr.completed {
+      background: #32CD32 !important;
     }
   </style>
 </body>
