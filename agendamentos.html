@@ -481,7 +481,7 @@
           extendedProps: {
             completed: data.completed || false // Status de conclusão
           },
-          allday: false
+          allDay: false
         });
       });
     }
@@ -514,16 +514,16 @@
         selectable: true,
         editable: false,
         dayMaxEvents: true,
-        slotDuration: '00:30:00', // Intervalo de 15 minutos
+        slotDuration: '00:30:00', // Intervalo de 30 minutos
         slotLabelInterval: '00:30:00',
-        allday: false,
+        allDaySlot: false,
         slotLabelFormat: {
           hour: 'numeric',
           minute: '2-digit',
           meridiem: false,
         },
         slotMinTime: '08:00:00',
-        slotMaxTime: '20:00:00',
+        slotMaxTime: '20:00:00', // Valor padrão para os outros dias
         expandRows: true,
         select: function (arg) {
           openModal(arg.start, arg.end);
@@ -533,13 +533,60 @@
           currentEvent = info.event;
           openDetailsModal(currentEvent);
         },
-        eventRender: function (info) {
-          // Se o evento é considerado como allDay, oculte-o
-          if (info.event.allDay) {
-            info.el.style.display = 'none';
+
+        // Modifica o slotMaxTime com base no dia da semana
+        datesSet: function (info) {
+          var today = new Date(info.view.currentStart);
+          if (today.getDay() === 6) { // Se for sábado (getDay() retorna 6 para sábado)
+            calendar.setOption('slotMaxTime', '15:00:00'); // Limita até 15:00
+          } else {
+            calendar.setOption('slotMaxTime', '20:00:00'); // Para os outros dias, mantém até 20:00
           }
+        },
+
+        events: function (info, successCallback) {
+          var events = [];
+          var currentDate = new Date(info.start);
+          var endDate = new Date(info.end);
+
+          while (currentDate < endDate) {
+            var start = new Date(currentDate);
+            var end = new Date(currentDate);
+
+            if (currentDate.getDay() === 6) { // Se for sábado
+              // Limita os horários até as 15:00 para o sábado
+              if (start.getHours() < 15) {
+                start.setHours(12, 0, 0); // 12:00 PM
+                end.setHours(13, 0, 0);   // 01:00 PM
+                events.push({
+                  start: start.toISOString(),
+                  end: end.toISOString(),
+                  display: 'background',
+                  color: 'gray',
+                  allDay: false
+                });
+              }
+            } else {
+              // Para outros dias, sem limitação, adiciona normalmente
+              start.setHours(12, 0, 0); // 12:00 PM
+              end.setHours(13, 0, 0);   // 01:00 PM
+              events.push({
+                start: start.toISOString(),
+                end: end.toISOString(),
+                display: 'background',
+                color: 'gray',
+                allDay: false
+              });
+            }
+
+            currentDate.setDate(currentDate.getDate() + 1); // Avança para o próximo dia
+          }
+
+          successCallback(events);
         }
       });
+
+
 
       calendar.render();
 
@@ -658,7 +705,11 @@
       detailsModal.hide();
     }
   </script>
-
+  <style>
+    .fc .fc-timegrid-slot{
+      height: 2.2em;
+    }
+  </style>
 </body>
 
 </html>
