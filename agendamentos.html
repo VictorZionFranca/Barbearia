@@ -290,8 +290,10 @@
                   <option value="" disabled selected>Selecione um serviço</option>
                 </select>
               </div>
-              <button type="button" class="btn btn-secondary" id="cancelButton">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
+              <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" id="cancelButton">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
             </form>
           </div>
         </div>
@@ -337,7 +339,8 @@
       </div>
     </div>
     <!-- Modal de Detalhes do Agendamento -->
-    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal fade modal-lg" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -350,9 +353,9 @@
             <p><strong>Serviço:</strong> <span id="modalService"></span></p>
             <p><strong>Data e Hora:</strong> <span id="modalDateTime"></span></p>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" id="deleteEventButton">Excluir</button>
-            <button type="button" class="btn btn-success" id="completeEventButton">Concluído</button>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-danger" id="deleteEventButton">Cancelar Agendamento</button>
+            <button type="button" class="btn btn-success" id="completeEventButton">Concluir Agendamento</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
           </div>
         </div>
@@ -704,10 +707,11 @@
       var detailsModal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
       detailsModal.hide();
     }
+    
   </script>
   <style>
-    .fc .fc-timegrid-slot{
-      height: 2.2em;
+    .fc .fc-timegrid-slot {
+      height: 1.7em;
     }
   </style>
 </body>
