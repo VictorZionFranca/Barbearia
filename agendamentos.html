@@ -471,15 +471,17 @@
       const eventsSnapshot = await getDocs(collection(db, "agendamentos"));
       eventsSnapshot.forEach(doc => {
         const data = doc.data();
-        // Adiciona cada evento ao calendário
+
+        // Monta o título diretamente usando os dados do evento do Firestore
         calendar.addEvent({
           id: doc.id, // Armazena o ID do documento para referência
-          title: `${data.serviceName} - ${data.clientName} (${data.barberName})`, // Formato do título
+          title: `Serviço: ${data.serviceName} - Cliente: ${data.clientName} - Barbeiro: ${data.barberName}`, // Formato do título
           start: data.start.toDate(), // Converte a data do Firestore para Date
           end: data.end.toDate(), // Converte a data do Firestore para Date
           extendedProps: {
             completed: data.completed || false // Status de conclusão
-          }
+          },
+          allday: false
         });
       });
     }
@@ -631,7 +633,8 @@
             serviceName: serviceDoc.data().nome,
             start: start,
             end: end,
-            completed: false
+            completed: false,
+            allday: false
           };
 
           const docRef = await addDoc(collection(db, "agendamentos"), newEvent); // Salva o agendamento no Firestore
