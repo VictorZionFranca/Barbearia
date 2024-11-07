@@ -85,11 +85,55 @@
 
     // Adiciona o evento de logout a um botão, se necessário
     document.getElementById('logoutButton').addEventListener('click', logout);
+
+
+    window.addEventListener('load', () => {
+      // Verifica se o *toast* já foi exibido na sessão
+      const hasShownToast = sessionStorage.getItem('hasShownToast');
+
+      if (!hasShownToast) {
+        // Marca que o *toast* foi exibido
+        sessionStorage.setItem('hasShownToast', 'true');
+
+        // Inicializa o *toast* com o tempo de delay (3 segundos = 3000 milissegundos)
+        const welcomeToast = new bootstrap.Toast(document.getElementById('welcomeToast'), {
+          delay: 2000 // Tempo de exibição antes de desaparecer automaticamente
+        });
+
+        // Exibe o *toast*
+        welcomeToast.show();
+      }
+    });
+
   </script>
+
+  <style>
+    #welcomeToast {
+      position: absolute;
+      top: 85px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1050;
+      /* Valor alto para sobrepor o header e outros elementos */
+      max-width: 260px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
 
 </head>
 
 <body>
+
+  <div class="toast" id="welcomeToast" role="alert" aria-live="assertive" aria-atomic="true"
+    style="position: absolute;">
+    <div class="toast-header">
+      <strong class="me-auto">Gestão Barbearia</strong>
+      <small>Agora</small>
+    </div>
+    <div class="toast-body">
+      Bem Vindo à Gestão Barbearia!
+    </div>
+  </div>
 
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
