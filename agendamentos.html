@@ -272,7 +272,7 @@
       </select>
 
       <!-- A tabela onde os agendamentos serão exibidos -->
-      <div class="table-responsive">
+      <div class="table-responsive mt-4">
         <table id="agendaTable" class="table table-striped table-bordered table-hover">
           <thead class="thead-dark">
             <tr>
@@ -557,6 +557,19 @@
           minute: '2-digit',
           meridiem: false,
         },
+        businessHours: [ // specify an array instead
+          {
+            daysOfWeek: [1, 2, 3, 4, 5], // Segunda a Sábado
+            startTime: '8:00',
+            endTime: '20:00',
+          },
+          {
+            daysOfWeek: [6], // Thursday, Friday
+            startTime: '8:00', // 10am
+            endTime: '15:00' // 4pm
+          }
+        ],
+        
         slotMinTime: '08:00:00',
         slotMaxTime: '20:00:00', // Valor padrão para os outros dias
         expandRows: true,
@@ -573,13 +586,47 @@
           openDetailsModal(currentEvent);
         },
 
-        // Modifica o slotMaxTime com base no dia da semana
+        // Adiciona classes de fundo cinza para sábado e domingo na semana
         datesSet: function (info) {
           var today = new Date(info.view.currentStart);
-          if (today.getDay() === 6) { // Se for sábado (getDay() retorna 6 para sábado)
-            calendar.setOption('slotMaxTime', '15:00:00'); // Limita até 15:00
+
+          // Verifica se a visualização é da semana
+          if (info.view.type === 'timeGridWeek') {
+            const dayCells = document.querySelectorAll('.fc-day'); // Seleciona todas as células de dias
+
+            dayCells.forEach(cell => {
+              const dayDate = new Date(cell.getAttribute('data-date')); // Pega a data de cada célula
+              const day = dayDate.getDay(); // Verifica o dia da semana
+
+              if (day === 6) { // Se for sábado (getDay() retorna 6 para sábado)
+                // Pinta todos os horários de sábado após as 15:00 em cinza
+                const timeslots = cell.querySelectorAll('.fc-timegrid-slot');
+                timeslots.forEach(slot => {
+                  const slotTime = slot.querySelector('.fc-time').textContent; // Pegando a hora do slot
+                  const hour = parseInt(slotTime.split(':')[0], 10);
+                  if (hour >= 15) {
+                    slot.classList.add('fc-saturday-after-15'); // Adiciona a classe para pintar o horário
+                  }
+                });
+              } else if (day === 0) { // Se for domingo (getDay() retorna 0 para domingo)
+                // Pinta todos os horários de domingo em cinza
+                const timeslots = cell.querySelectorAll('.fc-timegrid-slot');
+                timeslots.forEach(slot => {
+                  slot.classList.add('fc-sunday'); // Adiciona a classe para pintar todos os horários de domingo
+                });
+              }
+            });
+          }
+
+          // Mantém a lógica para definir o horário de fechamento para a visualização diária
+          if (info.view.type === 'dayGridDay' || info.view.type === 'timeGridDay') {
+            if (today.getDay() === 6 || today.getDay() === 0) {
+              calendar.setOption('slotMaxTime', '15:00:00'); // Limita o horário até 15:00 para sábado e domingo
+            } else {
+              calendar.setOption('slotMaxTime', '20:00:00'); // Para os outros dias, mantém até 20:00
+            }
           } else {
-            calendar.setOption('slotMaxTime', '20:00:00'); // Para os outros dias, mantém até 20:00
+            calendar.setOption('slotMaxTime', '20:00:00'); // Para outras visualizações, mantém até 20:00
           }
         },
 
@@ -601,7 +648,7 @@
                   start: start.toISOString(),
                   end: end.toISOString(),
                   display: 'background',
-                  color: 'gray',
+                  color: 'rgba(56, 56, 56, 0.4)',
                   allDay: false
                 });
               }
@@ -926,6 +973,10 @@
     .fc-timegrid-event,
     .fc-timegrid-more-link {
       font-size: 16px;
+    }
+
+    .fc .fc-non-business {
+      background-color: rgba(56, 56, 56, 0.4);
     }
 
     tr.completed {
