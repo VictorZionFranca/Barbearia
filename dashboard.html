@@ -15,7 +15,9 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -49,41 +51,41 @@
     const auth = getAuth(app);
 
     // Verifica se o usuário está autenticado ao carregar a página
-    document.addEventListener('DOMContentLoaded', function() {
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // Se o usuário não estiver autenticado, redireciona para a página de login
-                window.location.replace("index.html");
-            } else {
-                // O usuário está autenticado
-                console.log("Usuário autenticado:", user.email);
-                preventBack(); // Previne que o usuário volte para a página anterior
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          // Se o usuário não estiver autenticado, redireciona para a página de login
+          window.location.replace("index.html");
+        } else {
+          // O usuário está autenticado
+          console.log("Usuário autenticado:", user.email);
+          preventBack(); // Previne que o usuário volte para a página anterior
+        }
+      });
     });
 
     // Função para impedir que o usuário volte para a página anterior
     function preventBack() {
-        window.history.pushState(null, null, window.location.href);
-        window.onpopstate = function() {
-            // Redireciona para a página de login se o usuário tentar voltar
-            window.location.replace("dashboard.html");
-        };
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function () {
+        // Redireciona para a página de login se o usuário tentar voltar
+        window.location.replace("dashboard.html");
+      };
     }
 
     // Função de logout
     function logout() {
-        signOut(auth).then(() => {
-            // Redireciona para a página de login após o logout
-            window.location.replace("index.html");
-        }).catch((error) => {
-            console.error("Erro ao fazer logout:", error);
-        });
+      signOut(auth).then(() => {
+        // Redireciona para a página de login após o logout
+        window.location.replace("index.html");
+      }).catch((error) => {
+        console.error("Erro ao fazer logout:", error);
+      });
     }
 
     // Adiciona o evento de logout a um botão, se necessário
     document.getElementById('logoutButton').addEventListener('click', logout);
-</script>
+  </script>
 
 </head>
 
@@ -194,7 +196,7 @@
           <span>Colaboradores</span>
         </a>
       </li>
-      
+
       <li class="nav-item">
         <a class="nav-link collapsed" href="servicos.html">
           <i class="bi bi-scissors"></i>
@@ -290,7 +292,8 @@
                     </div>
                     <div class="ps-3">
                       <h6>30</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">a mais</span>
+                      <span class="text-success small pt-1 fw-bold">12%</span> <span
+                        class="text-muted small pt-2 ps-1">a mais</span>
 
                     </div>
                   </div>
@@ -325,7 +328,8 @@
                     </div>
                     <div class="ps-3">
                       <h6>R$3.264<span style="font-size: 16px;">,55</span></h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">a mais</span>
+                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">a
+                        mais</span>
 
                     </div>
                   </div>
@@ -361,7 +365,8 @@
                     </div>
                     <div class="ps-3">
                       <h6>1244</h6>
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">a menos</span>
+                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">a
+                        menos</span>
 
                     </div>
                   </div>
@@ -709,42 +714,42 @@
                     radar: {
                       // shape: 'circle',
                       indicator: [{
-                          name: 'Sales',
-                          max: 6500
-                        },
-                        {
-                          name: 'Administration',
-                          max: 16000
-                        },
-                        {
-                          name: 'Information Technology',
-                          max: 30000
-                        },
-                        {
-                          name: 'Customer Support',
-                          max: 38000
-                        },
-                        {
-                          name: 'Development',
-                          max: 52000
-                        },
-                        {
-                          name: 'Marketing',
-                          max: 25000
-                        }
+                        name: 'Sales',
+                        max: 6500
+                      },
+                      {
+                        name: 'Administration',
+                        max: 16000
+                      },
+                      {
+                        name: 'Information Technology',
+                        max: 30000
+                      },
+                      {
+                        name: 'Customer Support',
+                        max: 38000
+                      },
+                      {
+                        name: 'Development',
+                        max: 52000
+                      },
+                      {
+                        name: 'Marketing',
+                        max: 25000
+                      }
                       ]
                     },
                     series: [{
                       name: 'Budget vs spending',
                       type: 'radar',
                       data: [{
-                          value: [4200, 3000, 20000, 35000, 50000, 18000],
-                          name: 'Allocated Budget'
-                        },
-                        {
-                          value: [5000, 14000, 28000, 26000, 42000, 21000],
-                          name: 'Actual Spending'
-                        }
+                        value: [4200, 3000, 20000, 35000, 50000, 18000],
+                        name: 'Allocated Budget'
+                      },
+                      {
+                        value: [5000, 14000, 28000, 26000, 42000, 21000],
+                        name: 'Actual Spending'
+                      }
                       ]
                     }]
                   });
@@ -804,25 +809,25 @@
                         show: false
                       },
                       data: [{
-                          value: 1048,
-                          name: 'Search Engine'
-                        },
-                        {
-                          value: 735,
-                          name: 'Direct'
-                        },
-                        {
-                          value: 580,
-                          name: 'Email'
-                        },
-                        {
-                          value: 484,
-                          name: 'Union Ads'
-                        },
-                        {
-                          value: 300,
-                          name: 'Video Ads'
-                        }
+                        value: 1048,
+                        name: 'Search Engine'
+                      },
+                      {
+                        value: 735,
+                        name: 'Direct'
+                      },
+                      {
+                        value: 580,
+                        name: 'Email'
+                      },
+                      {
+                        value: 484,
+                        name: 'Union Ads'
+                      },
+                      {
+                        value: 300,
+                        name: 'Video Ads'
+                      }
                       ]
                     }]
                   });
@@ -896,18 +901,12 @@
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      &copy; Copyright <strong><span>Gestão Barbeira</span></strong>. Todos os Direitos Reservados
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
