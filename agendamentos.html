@@ -560,6 +560,10 @@
         slotMinTime: '08:00:00',
         slotMaxTime: '20:00:00', // Valor padrão para os outros dias
         expandRows: true,
+        dayMaxEventRows: true,  // Habilita o limite de eventos na visualização diária
+        moreLinkContent: (args) => {
+          return `+${args.num} agendamentos`;  // Customiza o texto para "agendamentos"
+        },  // Personaliza o texto para "agendamentos"
         select: function (arg) {
           openModal(arg.start, arg.end);
           calendar.unselect();
@@ -685,9 +689,9 @@
           currentEvent.setExtendedProp('completed', true);
           closeDetailsModal();
         }
-        
-          location.reload(); // Recarrega a página 
-        
+
+        location.reload(); // Recarrega a página 
+
       });
 
       document.getElementById("cancelButton").addEventListener("click", function () {
@@ -807,7 +811,7 @@
           const estadoCell = document.createElement("td");
           estadoCell.textContent = agendamento.completed ? 'Concluído' : 'Pendente';
           row.appendChild(estadoCell);
-          
+
           // Se o agendamento estiver concluído, adiciona a classe 'completed' à linha
           if (agendamento.completed) {
             row.classList.add("completed"); // Adiciona a classe 'completed' (verde)
@@ -912,7 +916,7 @@
 
     .fc-timegrid-event .fc-event-main {
       padding-left: 10px;
-      padding-top: 2px;
+      padding-top: 3px;
     }
 
     .fc-v-event {
@@ -921,7 +925,7 @@
 
     .fc-timegrid-event,
     .fc-timegrid-more-link {
-      font-size: 18px;
+      font-size: 16px;
     }
 
     tr.completed {
