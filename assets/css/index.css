@@ -1,0 +1,34 @@
+main {
+  background-image: url(/assets/img/fundo.jpg);
+  background-size: cover;
+  background-position: center;
+  position: relative;  
+}
+
+main::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Altere a opacidade conforme necessário */
+}
+
+.card {
+  margin-right: 50px;
+  max-width: 350px;
+}
+
+.card {
+  backdrop-filter: blur(15px) !important;
+}
+
+.card, .card-body, input {
+  background: transparent !important; /* O !important é opcional, use se necessário */
+  border: none; /* Remove a borda se você quiser um visual mais limpo */
+}
+
+.form-control {
+  border: 2px solid white !important;
+}
