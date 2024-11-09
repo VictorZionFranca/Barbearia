@@ -2,7 +2,7 @@ main {
   background-image: url(/assets/img/fundo.jpg);
   background-size: cover;
   background-position: center;
-  position: relative;  
+  position: relative;
 }
 
 main::before {
@@ -12,23 +12,80 @@ main::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3); /* Altere a opacidade conforme necessário */
+  background-color: rgba(0, 0, 0, 0.3);
+  /* Altere a opacidade conforme necessário */
 }
 
 .card {
   margin-right: 50px;
   max-width: 350px;
+  backdrop-filter: blur(15px);
 }
 
-.card {
-  backdrop-filter: blur(15px) !important;
+.card-title {
+  color: white !important;
 }
 
-.card, .card-body, input {
-  background: transparent !important; /* O !important é opcional, use se necessário */
-  border: none; /* Remove a borda se você quiser um visual mais limpo */
+p {
+  color: white;
+}
+
+.form-label {
+  color: white;
+}
+
+label {
+  color: white;
+}
+
+input {
+  color: white !important;
+}
+
+.card,
+.card-body,
+input {
+  background: rgba(30, 55, 75, 0.4) !important;
+  border: none;
+  backdrop-filter: blur(20px);
+  border-radius: 15px !important;
+}
+
+.card-body {
+  padding: 10px 20px 33px 20px !important;
 }
 
 .form-control {
   border: 2px solid white !important;
+}
+
+.form-check-input:checked {
+  background-color: #007bff !important;
+  /* Cor de fundo da checkbox ao ser marcada */
+  border-color: #007bff !important;
+}
+
+.form-check-input:checked::after {
+  content: "\2713";
+  color: white;
+  font-weight: bolder;
+  position: relative;
+  font-size: 14px;
+  bottom: 6px;
+  left: 2px;
+}
+
+.form-check-input:focus {
+  box-shadow: none !important;
+  /* Remove o contorno azul ao focar */
+}
+
+#togglePassword {
+  position: absolute;
+  right: 22px;
+  top: 262px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: white;
 }

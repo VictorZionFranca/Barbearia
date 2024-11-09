@@ -15,6 +15,8 @@
 
   <link rel="stylesheet" href="assets/css/index.css">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link
@@ -43,60 +45,60 @@
 
     // Verifica se o usuário já está autenticado ao carregar a página de login
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Se o usuário já estiver autenticado, redireciona para o dashboard
-            window.location.replace("dashboard.html");
-        }
+      if (user) {
+        // Se o usuário já estiver autenticado, redireciona para o dashboard
+        window.location.replace("dashboard.html");
+      }
     });
 
     // Chama a função preventBack ao carregar a página
-    document.addEventListener('DOMContentLoaded', function() {
-        preventBack(); // Previne que o usuário volte para a página anterior
+    document.addEventListener('DOMContentLoaded', function () {
+      preventBack(); // Previne que o usuário volte para a página anterior
 
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
-            const email = document.getElementById('login').value;
-            const password = document.getElementById('senha').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
+      document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+        const email = document.getElementById('login').value;
+        const password = document.getElementById('senha').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
 
-            // Exibe o carregamento
-            document.getElementById('loading').style.display = 'block';
+        // Exibe o carregamento
+        document.getElementById('loading').style.display = 'block';
 
-            // Configura a persistência de acordo com o checkbox "manter conectado"
-            const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+        // Configura a persistência de acordo com o checkbox "manter conectado"
+        const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
 
-            setPersistence(auth, persistenceType)
-                .then(() => {
-                    return signInWithEmailAndPassword(auth, email, password);
-                })
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    console.log("Login bem-sucedido:", user);
-                    // Usa location.replace para evitar que o usuário volte
-                    window.location.replace("dashboard.html");
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.error("Erro no login:", errorCode, errorMessage);
-                    alert("Login ou senha incorretos!"); // Mensagem de erro
-                })
-                .finally(() => {
-                    // Esconder o carregamento após a tentativa de login
-                    document.getElementById('loading').style.display = 'none';
-                });
-        });
+        setPersistence(auth, persistenceType)
+          .then(() => {
+            return signInWithEmailAndPassword(auth, email, password);
+          })
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log("Login bem-sucedido:", user);
+            // Usa location.replace para evitar que o usuário volte
+            window.location.replace("dashboard.html");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error("Erro no login:", errorCode, errorMessage);
+            alert("Login ou senha incorretos!"); // Mensagem de erro
+          })
+          .finally(() => {
+            // Esconder o carregamento após a tentativa de login
+            document.getElementById('loading').style.display = 'none';
+          });
+      });
     });
 
     // Função para impedir que o usuário volte para a página anterior
     function preventBack() {
-        window.history.pushState(null, null, window.location.href);
-        window.onpopstate = function() {
-            // Redireciona para o dashboard se o usuário tentar voltar
-            window.location.replace("index.html");
-        };
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function () {
+        // Redireciona para o dashboard se o usuário tentar voltar
+        window.location.replace("index.html");
+      };
     }
-</script>
+  </script>
 
 </head>
 
@@ -104,7 +106,6 @@
 
   <main>
     <div class="container">
-
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-end">
@@ -112,18 +113,14 @@
               <img src="assets/img/LogoBarbearia.png" style="z-index: 1000;">
             </div>
             <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
               <div class="card mb-3">
-
                 <div class="card-body">
-
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Login</h5>
                     <p class="text-center small">Coloque seu login e a sua senha!</p>
                   </div>
 
                   <form id="loginForm" class="row g-3 needs-validation" novalidate>
-
                     <div class="col-12">
                       <label for="login" class="form-label">Login</label>
                       <div class="input-group has-validation">
@@ -133,14 +130,18 @@
                     </div>
 
                     <!-- Código de carregamento após entrar no site -->
-                    <div id="loading" class="spinner-border" role="status" style="display:none; position: absolute;
-                    top: 175px; margin-left: 134px; width: 60px !important; height: 60px !important;">
+                    <div id="loading" class="spinner-border" role="status"
+                      style="display:none; position: absolute;
+                                        top: 175px; margin-left: 134px; width: 60px !important; height: 60px !important;">
                       <span class="visually-hidden">Loading...</span>
                     </div>
 
                     <div class="col-12">
                       <label for="senha" class="form-label">Senha</label>
                       <input type="password" name="password" class="form-control" id="senha" required>
+                      <span class="input-group-text" onclick="togglePasswordVisibility()" id="togglePassword">
+                        <i class="fas fa-eye" id="eyeIcon"></i> <!-- Ícone de olho -->
+                      </span>
                       <div class="invalid-feedback">Por favor digite sua senha!</div>
                     </div>
 
@@ -157,21 +158,36 @@
 
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-
       </section>
-
     </div>
-  </main><!-- End #main -->
+  </main>
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Função de vizualizar a senha
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('senha');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash'); // Ícone de olho com traço
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye'); // Ícone de olho
+      }
+    }
+  </script>
 
 </body>
 
