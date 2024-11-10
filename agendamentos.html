@@ -194,7 +194,9 @@
         </a>
       </li>
 
-      <li class="nav-heading">Pages</li>
+      <li class="nav-heading">
+        <hr style="color: black;">
+      </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
@@ -631,6 +633,38 @@
           }
         },
 
+        // Função para dar zoom no calendário com shift + scroll
+        datesSet: function (info) {
+          document.addEventListener('wheel', function (event) {
+            if (event.shiftKey) {
+              event.preventDefault();  // Impede o comportamento padrão do scroll
+
+              let currentInterval = calendar.getOption('slotLabelInterval');
+              let newInterval;
+
+              if (event.deltaY < 0) {
+                // Scroll para cima: diminui o intervalo (aumenta o zoom)
+                if (currentInterval === '00:30:00') {
+                  newInterval = '00:15:00';  // Muda para 15 minutos
+                }
+              } else if (event.deltaY > 0) {
+                // Scroll para baixo: aumenta o intervalo (diminui o zoom)
+                if (currentInterval === '00:15:00') {
+                  newInterval = '00:30:00';  // Muda para 30 minutos
+                }
+              }
+
+              // Se o novo intervalo for diferente do atual, atualiza o calendário
+              if (newInterval && newInterval !== currentInterval) {
+                calendar.setOption('slotDuration', newInterval);
+                calendar.setOption('slotLabelInterval', newInterval);
+                // Força a atualização do layout após a alteração
+                calendar.render();
+              }
+            }
+          }, { passive: false }); // Adicionando a opção passive: false
+        },
+
         events: function (info, successCallback) {
           var events = [];
           var currentDate = new Date(info.start);
@@ -672,8 +706,6 @@
           successCallback(events);
         }
       });
-
-
 
       calendar.render();
 
