@@ -222,13 +222,13 @@
 
     <!-- Botão de Ajuda -->
     <button type="button" class="btn btn-info position-absolute"
-      style="right: 40px; top: 100px; display: none !important;" data-bs-toggle="modal" data-bs-target="#helpModal"
-      title="Funcionamento do Calendario">
+      style="right: 40px; top: 100px; background-color: #012970; color: white; border: none;" data-bs-toggle="modal"
+      data-bs-target="#helpModal" title="Funcionamento do Calendario">
       <i class="bi bi-question-circle"></i>
     </button>
 
     <!-- Modal de Ajuda -->
-    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal fade modal-lg" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -237,20 +237,24 @@
           </div>
           <div class="modal-body">
             <p>
-              Para criar um agendamento, clique em um horário desejado no calendário. Preencha os campos necessários no
+              <strong>Criar Agendamento:</strong> Clique em um horário desejado no calendário e preencha os campos
+              necessários no
               formulário. <br> <br> Após preencher as informações, clique no botão <strong>Salvar</strong> para
-              confirmar o agendamento.
+              confirmar o agendamento ou <strong>Cancelar</strong> para cancelar.
             </p>
 
             <p>
-              Clique uma vez na tarefa para <strong>marcar como concluído</strong>.
+              <strong>Visualizar e Gerenciar Agendamentos:</strong>
+              Clique uma vez em um agendamento para abrir as opções de gerenciamento.
+              Na visualização, você verá botões para: <br> <br>
+              <strong>Cancelar Agendamento:</strong> Clique no botão para remover o agendamento. <br> <br>
+              <strong>Concluir Agendamento:</strong> Clique para marcar o agendamento como concluído.
             </p>
             <p>
-              Clique duas vezes na tarefa para <strong>excluir</strong> o agendamento.
-            </p>
-            <p>
-              Após marcar um agendamento como concluído, um clique único exibirá a opção de
-              <strong>excluir</strong> o agendamento.
+              <strong>Navegação com Zoom:</strong>
+
+              Para ajustar o zoom do calendário, segure a tecla Shift e role o scroll do mouse para aumentar ou diminuir
+              o zoom.
             </p>
           </div>
           <div class="modal-footer">
@@ -432,7 +436,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     import { firebaseConfig } from "./assets/js/firebaseConfig.js";
 
     // Inicializa o Firebase
@@ -572,7 +576,7 @@
             endTime: '15:00' // 4pm
           }
         ],
-
+        selectConstraint: "businessHours",
         slotMinTime: '08:00:00',
         slotMaxTime: '20:00:00', // Valor padrão para os outros dias
         expandRows: true,
@@ -797,6 +801,22 @@
           const serviceDuration = serviceDoc.data().duracao; // Duração do serviço
           end = new Date(start.getTime() + serviceDuration * 60000); // Adiciona a duração ao horário de início
 
+          // Verificar se já existe um agendamento para o mesmo barbeiro e horário
+          const overlappingEventsQuery = query(
+            collection(db, "agendamentos"),
+            where("barberName", "==", barberDoc.data().nome),
+            where("start", "<=", end),
+            where("end", ">", start)
+          );
+
+          const overlappingEventsSnapshot = await getDocs(overlappingEventsQuery);
+
+          if (!overlappingEventsSnapshot.empty) {
+            alert("O barbeiro já possui um agendamento nesse horário. Por favor, escolha outro horário.");
+            return; // Impede o agendamento se houver sobreposição
+          }
+
+          // Cria o novo evento se não houver conflito
           const newEvent = {
             clientName: clientDoc.data().nome,
             barberName: barberDoc.data().nome,
