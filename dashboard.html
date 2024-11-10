@@ -97,7 +97,7 @@
 
         // Inicializa o *toast* com o tempo de delay (3 segundos = 3000 milissegundos)
         const welcomeToast = new bootstrap.Toast(document.getElementById('welcomeToast'), {
-          delay: 2000 // Tempo de exibição antes de desaparecer automaticamente
+          delay: 3500 // Tempo de exibição antes de desaparecer automaticamente
         });
 
         // Exibe o *toast*
@@ -109,7 +109,7 @@
 
   <style>
     #welcomeToast {
-      position: absolute;
+      position: fixed !important;
       top: 85px;
       left: 50%;
       transform: translate(-50%, -50%);
