@@ -89,3 +89,7 @@ input {
   border: none;
   color: white;
 }
+
+#loading {
+  color: white;
+}
