@@ -405,6 +405,24 @@
       </div>
     </div>
 
+    <!-- Modal de Conflito -->
+    <div class="modal fade" id="conflictModal" tabindex="-1" aria-labelledby="conflictModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="conflictModalLabel">Atenção!</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            O barbeiro já possui um agendamento nesse horário. Por favor, escolha outro horário.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
   <!-- End #main -->
 
@@ -573,7 +591,7 @@
           {
             daysOfWeek: [6], // Thursday, Friday
             startTime: '8:00', // 10am
-            endTime: '15:00' // 4pm
+            endTime: '15:30' // 4pm
           }
         ],
         selectConstraint: "businessHours",
@@ -758,7 +776,6 @@
           await deleteDoc(doc(db, "agendamentos", currentEvent.id)); // Remove do Firestore
           currentEvent.remove(); // Remove do calendário
           closeDetailsModal();
-          location.reload(); // Recarrega a página 
         }
       });
 
@@ -812,7 +829,10 @@
           const overlappingEventsSnapshot = await getDocs(overlappingEventsQuery);
 
           if (!overlappingEventsSnapshot.empty) {
-            alert("O barbeiro já possui um agendamento nesse horário. Por favor, escolha outro horário.");
+            // Exibir o modal de conflito com Bootstrap
+            const modal = new bootstrap.Modal(document.getElementById('conflictModal'));
+            modal.show(); // Abre o modal
+
             return; // Impede o agendamento se houver sobreposição
           }
 
@@ -1016,7 +1036,7 @@
 
     .fc-timegrid-event .fc-event-main {
       padding-left: 10px;
-      padding-top: 3px;
+      padding-top: 1px;
     }
 
     .fc-v-event {
@@ -1034,6 +1054,11 @@
 
     tr.completed {
       background: #32CD32 !important;
+    }
+
+    .fc .fc-timegrid-axis-cushion,
+    .fc .fc-timegrid-slot-label-cushion {
+      padding: 2px 4px;
     }
   </style>
 </body>
