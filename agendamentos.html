@@ -761,6 +761,7 @@
           currentEvent.remove(); // Remove do calendário
           closeDetailsModal();
         }
+        location.reload(); // Recarrega a página 
       });
 
       document.getElementById("completeEventButton").addEventListener("click", async function () {
@@ -1043,6 +1044,17 @@
     .fc .fc-timegrid-axis-cushion,
     .fc .fc-timegrid-slot-label-cushion {
       padding: 2px 4px;
+    }
+
+    .fc-v-event .fc-event-main-frame {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      gap: 10px;
+    }
+
+    .fc-timegrid-event .fc-event-time {
+      font-size: 16px;
     }
   </style>
 </body>
